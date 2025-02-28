@@ -1,0 +1,1 @@
+//Contains functions to hash passwords or other sensitive data

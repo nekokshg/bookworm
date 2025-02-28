@@ -1,0 +1,1 @@
+//General configuration file where non-sensitive settings are stored

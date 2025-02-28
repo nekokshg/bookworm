@@ -1,0 +1,1 @@
+//Handles server errors or custom errors
