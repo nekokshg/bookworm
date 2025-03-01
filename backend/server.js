@@ -1,10 +1,10 @@
 //Set up express, import routes, start the DB, and start the server
 
-//Initialization
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require("./config/db");
+const connectDB = require('./config/db');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 dotenv.config();
 const app = express();
@@ -19,6 +19,8 @@ connectDB();
 app.use(express.json());
 
 //Routes setup
+//Use the review routes for the '/api/reviews/ path
+app.use('/api/reviews', reviewRoutes);
 
 //Start server
 const PORT = process.env.PORT || 5000;
