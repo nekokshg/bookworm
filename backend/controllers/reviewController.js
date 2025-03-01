@@ -4,7 +4,7 @@
  * Creating a review (POST)
  * Getting all reviews for a book (GET)
  * Getting all reviews by a user (GET)
- * Editing some parts (or all) of a review for a book (PATCH)
+ * Update a review for a book (PATCH)
  * Deleting a review (DELETE)
  */
 
@@ -57,7 +57,7 @@ const getAllReviewsByUser = async (req, res) => {
 }
 
 //Edit some parts (or all) of a review for a book
-const editReviewById = async (req, res) => {
+const updateReviewById = async (req, res) => {
     try {
         const { reviewId } = req.params;
         const { rating, content } = req.body;
@@ -69,7 +69,7 @@ const editReviewById = async (req, res) => {
         await review.save();
         res.status(200).json(review);
     } catch (error) {
-        res.status(500).json({message: 'Error editing review', error});
+        res.status(500).json({message: 'Error updating review', error});
     }
 }
 
@@ -86,5 +86,5 @@ const deleteReviewById = async (req, res) => {
     }
 }
 
-module.exports = { createReview, getAllReviewsForBook, getAllReviewsByUser, editReviewById, deleteReviewById };
+module.exports = { createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById };
 

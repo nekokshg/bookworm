@@ -3,7 +3,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { createReview, getAllReviewsForBook, getAllReviewsByUser, editReviewById, deleteReviewById } = require('../controllers/reviewController');
+const { createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById } = require('../controllers/reviewController');
 
 //POST: Create a review
 router.post('/', createReview);
@@ -12,10 +12,10 @@ router.post('/', createReview);
 router.get('/book/:bookId', getAllReviewsForBook);
 
 //GET: Get all reviews for a specific user
-router.get('/book/:userId', getAllReviewsByUser);
+router.get('/user/:userId', getAllReviewsByUser);
 
-//PATCH: Edit parts (or all) of a review for a book
-router.patch('/:reviewId', editReviewById);
+//PATCH: Update parts (or all) of a review for a book
+router.patch('/:reviewId', updateReviewById);
 
 //DELETE: Delete a review
 router.delete('/:reviewId', deleteReviewById);
