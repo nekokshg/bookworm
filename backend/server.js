@@ -19,7 +19,7 @@ connectDB();
 app.use(express.json());
 
 //Routes setup
-//Use the review routes for the '/api/reviews/ path
+app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
 
 //Start server
