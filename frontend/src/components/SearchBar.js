@@ -1,0 +1,1 @@
+//A search bar component for searching books by title, genre, tag, etc.

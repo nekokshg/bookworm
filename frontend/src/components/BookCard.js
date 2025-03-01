@@ -1,0 +1,1 @@
+//A smaller component that represents each book within a list, showing title, cover image, and tags.

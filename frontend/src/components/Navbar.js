@@ -1,0 +1,1 @@
+//A component that contains links to different pages (e.g., Home, Search Books, User Profile, etc...)

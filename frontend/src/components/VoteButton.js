@@ -1,0 +1,1 @@
+//A button for upvoting/downvoting tags
