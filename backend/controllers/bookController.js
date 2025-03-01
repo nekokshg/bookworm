@@ -2,15 +2,19 @@
 /**
  * This includes:
  * Find or create a book (POST)
+ * Add tag to book (POST)
  * Get book data from Google Books (GET)
  * Querying the database for all books with optional search and filter parameters (GET) - to list books by title, genre, author, etc...
+ * Vote on tag for an existing book (PATCH)
  * Update an existing book (PATCH)
  * Deleting a book (DELETE)
  */
 const axios = require('axios');
 const Book = require('../models/book');
 const Review = require('../models/review');
-const Subgenre = require('../models/subgenre');
+const Tag = require('../models/tag');
+
+const { createTag, updateTagPopularity } = require('../controllers/tagController');
 
 // Find or create a book in the database
 const findOrCreateBook = async (req, res) => {
@@ -33,6 +37,7 @@ const findOrCreateBook = async (req, res) => {
         title: bookData.title,
         authors: bookData.authors,
         genres: bookData.genres,
+        tags: [], //Tags are added later by the users
         description: bookData.description,
         publishedYear: bookData.publishedYear,
         coverImage: bookData.coverImage  // Store the cover image URL
@@ -46,8 +51,74 @@ const findOrCreateBook = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Error processing your request', error });
     }
-  };
-  
+};
+
+// Add tag to a book
+const addTagToBook = async (req, res) => {
+    try {
+        const { bookId } = req.params;
+        const { tagName } = req.body;
+
+        const book = await Book.findById(bookId);
+        if (!book) return res.status(404).json({ message: 'Book not found' });
+
+        // Check if the book already has this tag
+        const tagExists = book.tags.some(t => t.tagId.name.toLowerCase() === tagName.toLowerCase());
+        if (tagExists) return res.status(400).json({ message: 'Tag is already added to this book' });
+
+        // Use TagController to create or fetch the tag
+        let tag = await createTag(tagName);  // Create or find the tag by name
+
+        // Add tag to the book's tags array (book-specific popularityCount is 0)
+        book.tags.push({
+            tagId: tag._id,
+            popularityCount: 0,  // Initially, the popularity count for this book is 0
+        });
+
+        await book.save();
+
+        // Increment the global popularity count of the tag using TagController
+        await updateTagPopularity(tag._id, 1);  // Increment global popularity by 1
+
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding tag to book', error });
+    }
+};
+
+// Vote on a tag for a book (upvote or downvote)
+const voteOnTagForBook = async (req, res) => {
+    try {
+        const { bookId, tagId } = req.params;
+        const { vote } = req.body;  // Get the vote (1 for like, -1 for dislike)
+
+        // Error check: vote must be either 1 or -1
+        if (![1, -1].includes(vote)) return res.status(400).json({ message: 'Invalid vote value' });
+
+        const book = await Book.findById(bookId);
+        if (!book) return res.status(404).json({ message: 'Book not found' });
+
+        // Check if the tag is associated with the book
+        const tag = book.tags.find(t => t.tagId.toString() === tagId);
+        if (!tag) return res.status(400).json({ message: 'Tag not associated with this book' });
+
+        // Increment or decrement the book-specific popularity count based on the vote
+        if (vote === 1) {
+            tag.popularityCount += 1;
+        } else {
+            tag.popularityCount -= 1;
+        }
+
+        await book.save();
+
+        // Update the global popularity count of the tag using TagController
+        await updateTagPopularity(tagId, vote);  // Update global popularity (increment or decrement)
+
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(500).json({ message: 'Error voting on tag for book', error });
+    }
+};
 
 //Get book data from Google Books API
 const getBookDataFromExternAPI = async (query) => {
@@ -70,7 +141,7 @@ const getBookDataFromExternAPI = async (query) => {
 
 //Query and get books with the optional search and filter parameters
 const filterAndGetBooks = async (req,res) => {
-    const { title, author, genre, subgenre, publishedYear, minReviewRating } = req.query;
+    const { title, author, genre, tag, publishedYear, minReviewRating } = req.query;
     const query = {}; //Query object that will be used to filter books in the database
 
     //Filter by title (optional)
@@ -96,12 +167,12 @@ const filterAndGetBooks = async (req,res) => {
         query.genres = { $all: genresArray }; //Match any books that has all of the genres in the array
     }
 
-    //Filter by subgenre (optional)
-    if (subgenre) {
-        const subgenresArray = subgenre.split(',').map(s => s.trim());
-        const subgenres = await Subgenre.find({ name: { $in: subgenresArray }}); //Find the subgenre documents from the Subgenre model that match any of the names in the subgenresArray. Gives the subgenre IDs that'll be used for filtering the books
-        if (subgenres.length > 0) {
-            query.subgenres = { $all: subgenres.map(s => s._id)}; //If valid subgenres exist, filter books that have all the subgenre IDs
+    //Filter by tag (optional)
+    if (tag) {
+        const tagsArray = tag.split(',').map(t => t.trim());
+        const tags = await Tag.find({ name: { $in: tagsArray }}); //Find the tag documents from the Subgenre model that match any of the names in the subgenresArray. Gives the subgenre IDs that'll be used for filtering the books
+        if (tags.length > 0) {
+            query.tags = { $all: tags.map(t => t._id)}; //If valid tags exist, filter books that have all the tag IDs
         }
     }   
 
@@ -123,7 +194,7 @@ const filterAndGetBooks = async (req,res) => {
 
     try {
         const books = await Book.find(query)
-            .populate('subgenres') //Tells Mongoose to replace the subgenres field (which contains an array of subgenre IDs) with the actual subgenre documents
+            .populate('tags') //Tells Mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
             .populate('reviews');
         res.status(200).json(books);
     } catch (error) {
@@ -135,14 +206,14 @@ const filterAndGetBooks = async (req,res) => {
 const updateBookById = async (req, res) => {
     try {
         const { bookId } = req.params;
-        const { title, authors, genres, subgenres, description, publishedYear } = req.body;
+        const { title, authors, genres, tags, description, publishedYear } = req.body;
         const book = await Book.findById(bookId);
         if (!book) return res.status(404).json({message: 'Book not found'});
-        if (subgenres) {
-            //Look up the ObjectIds for the provided subgenre names
-            const subgenreIds = await Subgenre.find({name: {$in: subgenres}}).select('_id');
+        if (tags) {
+            //Look up the ObjectIds for the provided tag names
+            const tagIds = await Tag.find({name: {$in: tags}}).select('_id');
             //Replace the existing subgenres with the new subgenreObjectIds
-            book.subgenres = subgenreIds.map(sg => sg._id);
+            book.tags = tagIds.map(t => t._id);
         }
         //Update only the fields provided in the request body
         if (title) book.title = title;
@@ -170,4 +241,4 @@ const deleteBookById = async (req, res) => {
     }
 }
 
-module.exports= { findOrCreateBook, filterAndGetBooks, updateBookById, deleteBookById };
+module.exports= { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, deleteBookById };
