@@ -1,1 +1,0 @@
-//A page that displays detailed information about a book, including its tags, descriptions, etc.
