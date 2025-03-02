@@ -4,6 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const tagRoutes = require('./routes/tagRoutes');
@@ -21,6 +22,7 @@ connectDB();
 app.use(express.json());
 
 //Routes setup
+app.use('./api/user', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/tags', tagRoutes);
