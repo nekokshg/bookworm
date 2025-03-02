@@ -42,6 +42,10 @@ const bookSchema = mongoose.Schema({
         type: String, //This will store the URL of the cover image
         required: false,
     },
+    popularity: {
+        type: Number,
+        default: 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

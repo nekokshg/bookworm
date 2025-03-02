@@ -7,12 +7,14 @@
  * Querying the database for all books with optional search and filter parameters (GET) - to list books by title, genre, author, etc...
  * Vote on tag for an existing book (PATCH)
  * Update an existing book (PATCH)
+ * Favorite/unfavoriting a book (updating popularity count) (PATCH)
  * Deleting a book (DELETE)
  */
 const axios = require('axios');
 const Book = require('../models/book');
 const Review = require('../models/review');
 const Tag = require('../models/tag');
+const User = require('../models/user');
 
 const { createTag, updateTagPopularity } = require('../controllers/tagController');
 
@@ -228,6 +230,36 @@ const updateBookById = async (req, res) => {
     }
 }
 
+//Favorite/unfavorite a book
+const favoriteBook = async (req, res) => {
+    const {userId, bookId} = req.params;
+    try {
+        const user = await User.findById(userId);
+        const book = await Book.findById(bookId);
+
+        if (!user || !book) return res.status(404).json({message: 'User or book not found'});
+
+        //Check if book is already favorited by user 
+        const isFavorited = user.favoriteBooks.includes(bookId);
+
+        if (isFavorited) {
+            //User wants to unfavorite, so decrement the popularity count
+            await Book.findById(bookId, {$inc: {popularity: -1 }});
+            //Remove the book from the user's favorites list
+            await User.findByIdAndUpdate(userId, {$pull: {favoriteBooks: bookId}});
+            return res.status(200).json({message: 'Book unfavorited'});
+        } else {
+            //User wants to favorite, so increment the popularity count
+            await Book.findById(bookId, {$inc: {popularity: 1}});
+            //Add book to the user's favorites list
+            await User.findByIdAndUpdate(userId, {$push: {favoriteBooks: bookId}});
+            return res.status(200).json({message: 'Book favorited'});
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Error handling favorite/unfavorite', error});
+    }
+}
+
 //Delete an existing book by ID
 const deleteBookById = async (req, res) => {
     try{
@@ -241,4 +273,4 @@ const deleteBookById = async (req, res) => {
     }
 }
 
-module.exports= { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, deleteBookById };
+module.exports= { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, favoriteBook, deleteBookById };

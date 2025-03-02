@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, deleteBookById } = require('../controllers/bookController');
+const { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, favoriteBook, deleteBookById } = require('../controllers/bookController');
 
 //POST request to search for a book or create it if not found
 router.post('/findOrCreate/:searchQuery', findOrCreateBook);
@@ -18,6 +18,9 @@ router.patch('/:bookId', updateBookById);
 
 //PATCH request to vote on a tag for a specific book
 router.patch('/:bookId/vote-tag/:tagId', voteOnTagForBook);
+
+//PATCH request to favorite or unfavorite a book
+router.patch('/:userId/favorite/:bookId', favoriteBook);
 
 //DELETE: Delte a book
 router.delete('/:bookId', deleteBookById);
