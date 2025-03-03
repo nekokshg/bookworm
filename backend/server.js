@@ -22,10 +22,15 @@ connectDB();
 app.use(express.json());
 
 //Routes setup
-app.use('./api/user', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/tags', tagRoutes);
+
+// Add a route for the root URL
+app.get('/', (req, res) => {
+    res.send('Server is running');  // Return a message to show server is up
+});
 
 //Start server
 const PORT = process.env.PORT || 5000;

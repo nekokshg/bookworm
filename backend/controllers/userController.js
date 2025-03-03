@@ -6,8 +6,32 @@
  */
 
 const User = require('../models/user');
-const { hashPassword, comparePassword, hashPassword } = require('../utils/hashUtils');
 const { generateToken } = require('../utils/tokenUtils');
+
+const getUsers = async (req, res) => {
+    try{
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching users'}, error);
+    }
+}
+
+//Get user data from the database based on the token
+const getUserData = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({message: 'User not found'});
+        res.status(200).json({
+            username: user.username,
+            email: user.email,
+            favoriteBooks: user.favoriteBooks,
+        })
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching user data'}, error);
+    }
+}
 
 //Register a new user
 const registerUser = async (req, res) => {
@@ -19,7 +43,6 @@ const registerUser = async (req, res) => {
         //Create and save the new user, password will be automatically hashed by the schema
         const newUser = new User({username, email, password});
         await newUser.save();
-
         //Generate a token for the user
         const token = generateToken(newUser._id);
         res.status(201).json({token, user: {username, email, favoriteBooks: newUser.favoriteBooks}});
@@ -31,9 +54,9 @@ const registerUser = async (req, res) => {
 //Login a user
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await User.findOne({email});
-        if (!user) return res.status(400).json({message: 'User not found'});
+        const { userNameorEmail, password } = req.body;
+        const user = await User.findOne({userNameorEmail});
+        if (!user) return res.status(400).json({ message: 'User not found' });
 
         //Compare the entered password with the hashed password in the database
         const isMatch = await user.comparePassword(password);
@@ -48,6 +71,8 @@ const loginUser = async (req, res) => {
 }
 
 module.exports = {
+    getUsers,
+    getUserData,
     registerUser,
     loginUser,
 };

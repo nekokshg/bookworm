@@ -12,6 +12,15 @@ const Review = require('../models/review');
 const Book = require('../models/book');
 const User = require('../models/user');
 
+const getReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find();
+        res.status(200).json(reviews);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching reviews', error});
+    }
+}
+
 //Create a new review
 const createReview = async (req, res) => {
     try {
@@ -86,5 +95,5 @@ const deleteReviewById = async (req, res) => {
     }
 }
 
-module.exports = { createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById };
+module.exports = { getReviews, createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById };
 

@@ -2,11 +2,10 @@
 //It will be called when the server starts up
 
 const mongoose = require('mongoose');
-const MONGO_URI = process.env.MONGO_URI;
 
 const connectDB = async () => {
     try{
-        await mongoose.connect(MONGO_URI);
+        await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('MongoDB connection error', error);

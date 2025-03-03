@@ -6,7 +6,7 @@ const {
     comparePassword,
 } = require('../utils/hashUtils');
 
-const userSchema = new mongoose.Schema({
+const userSchema = mongoose.Schema({
     username: {
         type: String,
         require: true,
@@ -28,15 +28,14 @@ const userSchema = new mongoose.Schema({
 });
 
 //Hash the password before saving a new user
-userSchema.pre('save', async (next) => {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
-
     this.password = await hashPassword(this.password);
     next(); //Proceed with saving the user
 });
 
 //Compare the entered password with the hashed password
-userSchema.methods.comparePassword = (password) => {
+userSchema.methods.comparePassword = function (password) {
     return comparePassword(password, this.password);
 };
 

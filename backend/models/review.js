@@ -37,7 +37,7 @@ const reviewSchema = mongoose.Schema({
         required: true,
     },
     createdAt: {
-        tyep: Date,
+        type: Date,
         default: Date.now,
     },
 });

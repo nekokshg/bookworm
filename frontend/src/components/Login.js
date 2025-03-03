@@ -1,1 +1,0 @@
-//A component that displays a login form for users to authenticate

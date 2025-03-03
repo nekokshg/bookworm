@@ -3,10 +3,12 @@
 
 const express = require('express');
 const router = express.Router();
-const { createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById } = require('../controllers/reviewController');
+const { getReviews, createReview, getAllReviewsForBook, getAllReviewsByUser, updateReviewById, deleteReviewById } = require('../controllers/reviewController');
+
+router.get('/', getReviews);
 
 //POST: Create a review
-router.post('/', createReview);
+router.post('/create', createReview);
 
 //GET: Get all reviews for a specific book
 router.get('/book/:bookId', getAllReviewsForBook);

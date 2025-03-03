@@ -3,9 +3,20 @@
 const express = require('express');
 const router = express.Router();
 const {
+    authenticateToken
+} = require('../middlewares/authenticate')
+const {
+    getUsers,
+    getUserData,
     registerUser,
     loginUser
 } = require('../controllers/userController');
+
+//GET request for all users
+router.get('/', getUsers);
+
+//GET request (protected route): fetch user data
+router.get('/profile', authenticateToken, getUserData);
 
 //POST request for user registration
 router.post('/register', registerUser);
