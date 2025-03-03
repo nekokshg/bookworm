@@ -1,0 +1,9 @@
+.appContainer {
+    display: flex;
+}
+
+.mainContentContainer {
+    margin-left: 72px;
+    padding: 20px;
+    flex: 1;
+}

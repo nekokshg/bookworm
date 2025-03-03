@@ -1,0 +1,37 @@
+.navContainer {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 72px;
+    height: 100%;
+    background-color: wheat;
+    
+}
+
+.navList {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.navItem {
+    margin: 15px 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.navItem:hover {
+    background-color: white;
+}
+
+.navImage {
+    width: 20px;
+}
