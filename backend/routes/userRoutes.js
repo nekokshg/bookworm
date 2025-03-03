@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const {
     authenticateToken
-} = require('../middlewares/authenticate')
+} = require('../middlewares/authenMiddleware')
 const {
     getUsers,
     getUserData,
