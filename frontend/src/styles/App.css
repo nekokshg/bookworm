@@ -1,9 +1,23 @@
+@import './variables.css'; 
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+}
+
 .appContainer {
     display: flex;
 }
 
 .mainContentContainer {
-    margin-left: 72px;
-    padding: 20px;
+    margin-left: 73px;
     flex: 1;
+    padding: 0;
 }

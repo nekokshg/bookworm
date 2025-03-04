@@ -25,7 +25,7 @@ const findOrCreateBook = async (req, res) => {
   
       // Check if the book already exists in the database
       let book = await Book.findOne({ title: { $regex: searchQuery, $options: 'i' } });  // findOne searches for a single doc that matches provided criteria
-  
+
       // If the book exists, return it
       if (book) {
         return res.status(200).json(book);
@@ -38,16 +38,18 @@ const findOrCreateBook = async (req, res) => {
       const newBook = new Book({
         title: bookData.title,
         authors: bookData.authors,
-        genres: bookData.genres,
+        genres: [], //<= fix later will implement ML to categorize book title and description to genres
         tags: [], //Tags are added later by the users
         description: bookData.description,
         publishedYear: bookData.publishedYear,
         coverImage: bookData.coverImage  // Store the cover image URL
       });
+
+      console.log(newBook);
   
       // Save the new book to the database
       await newBook.save();
-  
+
       // Return the newly created book
       res.status(201).json(newBook);
     } catch (error) {
@@ -122,18 +124,35 @@ const voteOnTagForBook = async (req, res) => {
     }
 };
 
-//Get book data from Google Books API
+//Need to add a report book feature to notify me when to update a book cover or description
+
+//Get book data from Google Books API using title
+//Need to factor in queries using isbn author etc...
+//Do better querying later right now its just getting the first book in the response and thats no good
+//what if we want the most recent book?
+//Also its not getting the most popularized cover
+//Will have to implement some sort of search with the response
 const getBookDataFromExternAPI = async (query) => {
     try {
-        const response = await axios.get(`https://openlibrary.org/search.json?q=${query}`);
+        let response = await axios.get(`https://openlibrary.org/search.json?title=${query}`);
         if (!response.data.docs || response.data.docs.length === 0) throw new Error('No results found from Open Library');
         const bookData = response.data.docs[0]; //Assuming that the first book in the response is the one we want
+
+        const key = bookData.key;
+        response = await axios.get(`https://openlibrary.org${key}`);
+        const bookDetails = response.data;
+        let description;
+        if (bookDetails.description.value) description = bookDetails.description.value;
+        else if (bookDetails.description) description = bookDetails.description;
+        else description = 'Description not available'
+
+        console.log(bookData)
+        console.log(bookDetails)
         return {
             title: bookData.title,
             authors: bookData.author_name ? bookData.author_name.join(', ') : 'Unknown', //Multiple authors
-            genres: bookData.subjects || [], //Open Library returns subjects as genres
-            description: bookData.first_sentence ? bookData.first_sentence.join(' ') : 'No description available',
-            publishedYear: bookData.publish_year ? bookData.publish_year[0] : 'Unknown', //Open Library stores publish years as an array we only want the first one
+            description: description,
+            publishedYear: bookData.first_publish_year, //Open Library stores publish years as an array we only want the first one
             coverImage: bookData.cover_i ? `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg` : null // Get cover image URL
         }
     } catch (error) {

@@ -1,0 +1,17 @@
+@import './variables.css'; 
+
+.searchContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.searchBarContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.searchTitle{
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+}

@@ -24,7 +24,7 @@ const bookSchema = mongoose.Schema({
     }],
     genres: [{
         type: String, //Store genres as strings (e.g., ["Fantasy", "Romance"])
-        required: true,
+        required: false,
     }],
     tags: [{
         tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag' },
@@ -32,7 +32,7 @@ const bookSchema = mongoose.Schema({
     }],
     description: {
         type: String,
-        required: true,
+        required: false,
     },
     publishedYear: {
         type: Number,

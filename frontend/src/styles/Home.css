@@ -1,0 +1,52 @@
+@import './variables.css'; 
+
+a, .react-router-dom .link{
+    text-decoration: none;
+    color: inherit;
+}
+
+.homeContainer {
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--secondary-color);
+    padding-left: 20px;
+}
+
+.buttonContainer {
+    padding-right: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.loginButton, .logoutButton {
+    border: none;
+
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: var(--white-color);
+    cursor: pointer;
+    font-weight: var(--font-weight-semibold);
+}
+
+.registerButton {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    font-weight: var(--font-weight-semibold);
+}
+
+.loginButton:hover, .logoutButton:hover {
+    background-color: #f2f2f2;
+}
+
+.registerButton:hover {
+    background-color: #4a2316;
+}

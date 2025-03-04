@@ -1,0 +1,14 @@
+@import './variables.css'; 
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bookList {
+    position: relative; /* Ensure the pseudo-element is relative to this container */
+    padding: 40px 20px;
+}
+
+

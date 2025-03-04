@@ -1,0 +1,14 @@
+:root {
+    --primary-color: #c76b2a;
+    --secondary-color: #f0c260;
+    --accent-color: #5e2d20;
+    --background-color: #211210;
+    --white-color: white;
+    --font-family: 'Inter', sans-serif;  /* Set the Inter font as the default */
+    --font-weight-normal: 400;           /* Normal weight */
+    --font-weight-semibold: 600;         /* Semibold weight */
+    --font-weight-bold: 700;             /* Bold weight */
+    --font-size-base: 16px;              /* Default font size */
+    --font-size-heading: 24px;           /* Heading font size */
+    --line-height: 1.5; 
+}
