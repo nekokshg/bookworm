@@ -28,6 +28,10 @@
     box-shadow: 0 0 5px rgba(240, 194, 96, 0.5);
 }
 
+.searchSelect{
+    
+}
+
 .submitButton{
     border: none;
     padding: 10px 15px;

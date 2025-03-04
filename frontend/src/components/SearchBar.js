@@ -7,18 +7,30 @@ import '../styles/SearchBar.css'
 
 const SearchBar = () => {
     const [query, setQuery] = useState('');
+    const [searchType, setSearchType] = useState('title'); //Default: search by title
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(query.trim() !== '') {
-            navigate(`/search?query=${query}`);
+            navigate(`/search?${searchType}=${query}`);
         }
     }
 
     return (
         <div className='searchContainer'>
             <form onSubmit={handleSubmit} className='searchForm'>
+                <select
+                    className='searchSelect'
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                >
+                    <option value='title'>Title</option>
+                    <option value='authors'>Authors</option>
+                    <option value='genres'>Genres</option>
+                    <option value='tags'>Tags</option>
+                    <option value='isbn'>ISBN</option>
+                </select> 
                 <input 
                     className='searchInput'
                     type='text'

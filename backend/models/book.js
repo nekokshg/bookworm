@@ -54,6 +54,14 @@ const bookSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    OLKey: {
+        type: String,
+        required: true,
+    },
+    isbns: [{
+        type: String,
+        required: false,
+    }]
 });
 
 const Book = mongoose.model('Book', bookSchema);

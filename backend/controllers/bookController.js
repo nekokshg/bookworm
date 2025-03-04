@@ -17,43 +17,63 @@ const Tag = require('../models/tag');
 const User = require('../models/user');
 
 const { createTag, updateTagPopularity } = require('../controllers/tagController');
+const { fetchByTitle, fetchByISBN } = require('../utils/openLibraryAPI');
 
-// Find or create a book in the database
-const findOrCreateBook = async (req, res) => {
+//Get book by title
+const getBook = async(title) => {
+    return await Book.findOne({ title: { $regex: title, $options: 'i' } });
+}
+
+// Create a book in the database
+const createBook = async (searchQuery) => {
     try {
-      const { searchQuery } = req.params;  // Get search query from URL params
-  
-      // Check if the book already exists in the database
-      let book = await Book.findOne({ title: { $regex: searchQuery, $options: 'i' } });  // findOne searches for a single doc that matches provided criteria
+        const {title, author, genre, isbn} = searchQuery;
 
-      // If the book exists, return it
-      if (book) {
-        return res.status(200).json(book);
-      }
-  
-      // If the book doesn't exist, fetch data from Open Library API
-      const bookData = await getBookDataFromExternAPI(searchQuery);
-  
-      // Create a new book if data is valid
-      const newBook = new Book({
-        title: bookData.title,
-        authors: bookData.authors,
-        genres: [], //<= fix later will implement ML to categorize book title and description to genres
-        tags: [], //Tags are added later by the users
-        description: bookData.description,
-        publishedYear: bookData.publishedYear,
-        coverImage: bookData.coverImage  // Store the cover image URL
-      });
+        let bookData;
 
-      console.log(newBook);
-  
-      // Save the new book to the database
-      await newBook.save();
+        if (title) {
+            bookData = await fetchByTitle(title);
+        }
 
-      // Return the newly created book
-      res.status(201).json(newBook);
+        else if (isbn) {
+            //Check if its a valid isbn and if we have book in our db but just havent added the isbn
+            let response = await axios.get(`https://openlibrary.org/search.json?isbn=${isbn}`);
+            if (!response.data.docs || response.data.docs.length === 0) throw new Error('No results found invalid isbn');
+            let book = response.data.docs[0];
+            let findBook = await getBook(book.title);
+            if (findBook) {
+                //Add the ISBN if it's not already in the array
+                findBook = await Book.findOneAndUpdate(
+                    {_id: findBook._id},
+                    {$addToSet: {isbns: isbn}},
+                    {new: true} //Returns the updated doc
+                );
+                return [findBook];
+            }
+            //Else, create the book by the isbn
+            bookData = await fetchByISBN(isbn);
+        }
+  
+        // Create a new book if data is valid
+        const newBook = new Book({
+            title: bookData.title,
+            authors: bookData.authors,
+            genres: [], //<= fix later will implement ML to categorize book title and description to genres
+            tags: [], //Tags are added later by the users
+            description: bookData.description,
+            publishedYear: bookData.publishedYear,
+            coverImage: bookData.coverImage,  // Store the cover image URL
+            OLKey: bookData.OLKey,
+            isbns: bookData.isbns,
+        });
+    
+        // Save the new book to the database
+        await newBook.save();
+
+        // Return the newly created book
+        return [newBook];
     } catch (error) {
-      res.status(500).json({ message: 'Error processing your request', error });
+        res.status(500).json({ message: 'Error processing your request', error });
     }
 };
 
@@ -124,45 +144,10 @@ const voteOnTagForBook = async (req, res) => {
     }
 };
 
-//Need to add a report book feature to notify me when to update a book cover or description
-
-//Get book data from Google Books API using title
-//Need to factor in queries using isbn author etc...
-//Do better querying later right now its just getting the first book in the response and thats no good
-//what if we want the most recent book?
-//Also its not getting the most popularized cover
-//Will have to implement some sort of search with the response
-const getBookDataFromExternAPI = async (query) => {
-    try {
-        let response = await axios.get(`https://openlibrary.org/search.json?title=${query}`);
-        if (!response.data.docs || response.data.docs.length === 0) throw new Error('No results found from Open Library');
-        const bookData = response.data.docs[0]; //Assuming that the first book in the response is the one we want
-
-        const key = bookData.key;
-        response = await axios.get(`https://openlibrary.org${key}`);
-        const bookDetails = response.data;
-        let description;
-        if (bookDetails.description.value) description = bookDetails.description.value;
-        else if (bookDetails.description) description = bookDetails.description;
-        else description = 'Description not available'
-
-        console.log(bookData)
-        console.log(bookDetails)
-        return {
-            title: bookData.title,
-            authors: bookData.author_name ? bookData.author_name.join(', ') : 'Unknown', //Multiple authors
-            description: description,
-            publishedYear: bookData.first_publish_year, //Open Library stores publish years as an array we only want the first one
-            coverImage: bookData.cover_i ? `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg` : null // Get cover image URL
-        }
-    } catch (error) {
-        throw new Error('Error fetching data from Open Library API');
-    }
-}
-
 //Query and get books with the optional search and filter parameters
 const filterAndGetBooks = async (req,res) => {
-    const { title, author, genre, tag, publishedYear, minReviewRating } = req.query;
+    const { title, authors, genre, tag, publishedYear, minReviewRating, isbn } = req.query;
+    console.log(req.query)
     const query = {}; //Query object that will be used to filter books in the database
 
     //Filter by title (optional)
@@ -171,9 +156,14 @@ const filterAndGetBooks = async (req,res) => {
         query.title = { $regex: title, $options: 'i' }; //i = case-insensitive search
     }
 
-    //Filter by author (optional)
-    if (author) {
-        query.title = { $regex: title, $options: 'i'};
+    //Filter by authors (optional)
+    if (authors) {
+        console.log(authors)
+        const authorsArray = authors.split(',').map(a => a.trim());
+        // Ensure the book has ALL the given author names in some form (accounting for the fact that the user might be lazy and only put in first name not full name)
+        query.$and = authorsArray.map(name => ({
+            authors: { $regex: name, $options: 'i' }
+        }));
     }
 
     //Filter by genre (optional)
@@ -213,10 +203,20 @@ const filterAndGetBooks = async (req,res) => {
         query._id = {$in: bookIds}; //Don't need to check if the book has all of the book IDs from the aggregation query. We just need to find books that match any of the valid bookIds that have reviews >= minReviewRating
     }
 
+    if (isbn) {
+        const isbnArray = isbn.split(',').map(i => i.trim()); //Convert input into an array
+        query.isbns = {$in: isbnArray}; //Match any book that has one of the isbns in the input array
+    }
+
     try {
-        const books = await Book.find(query)
+        let books = await Book.find(query)
             .populate('tags') //Tells Mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
-            .populate('reviews');
+        
+        //Check if the query has genres, tags or authors we do not want to create a book then
+        if (books.length === 0 && (title || isbn) && !minReviewRating && !genre && !tag && !authors && !publishedYear) {
+            console.log('No books found, attempting to create');
+            books = await createBook(req.query);
+        }
         res.status(200).json(books);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching books', error });
@@ -292,4 +292,4 @@ const deleteBookById = async (req, res) => {
     }
 }
 
-module.exports= { findOrCreateBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, favoriteBook, deleteBookById };
+module.exports= { createBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, favoriteBook, deleteBookById };

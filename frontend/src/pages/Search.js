@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import BookList from '../components/BookList';
-import { findOrCreateBook } from '../services/bookAPI';
+import { getBooks} from '../services/bookAPI';
 import '../styles/Search.css';
 
 const Search = () => {
@@ -11,21 +11,26 @@ const Search = () => {
     const [previousQuery, setPreviousQuery] = useState('');
     const location = useLocation(); //Get the current location (URL)
 
-    const query = new URLSearchParams(location.search).get('query');
-    if (query && query !== previousQuery) { 
-        setPreviousQuery(query)
+    const searchParams = new URLSearchParams(location.search);
+    const queryParams = {};
+    searchParams.forEach((value, key) => {
+        queryParams[key] = value;
+    })
+
+    if (JSON.stringify(queryParams) !== JSON.stringify(previousQuery)) { 
+        setPreviousQuery(queryParams)
         setResults([]);
 
-        // Call API here depending on query
-        findOrCreateBook(query)
+        getBooks(queryParams)
             .then((data) => {
-                setResults(prevResults => [...prevResults, data]);
+                setResults(data);
             })
             .catch((err) => {
-                setError('Failed to fetch results');
-            });
+                setError('Failed to get books')
+            })
     }
 
+    //Need to add a filter by favorites option
     return (
     <div className='searchContainer'>
         <div className='searchBarContainer'>
