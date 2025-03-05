@@ -8,7 +8,9 @@
     left: 0;
     width: 72px;
     height: 100%;
-    border: 1px solid rgba(240, 194, 96, .3);
+
+    border: 1px solid rgba(163, 104, 91, 0.5); /* 50% opacity */
+    box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
 }
 
 .navList {
@@ -31,7 +33,11 @@
 }
 
 .navItem:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--color-soft-orange); /* Warm glow */
+    border-color: var(--color-earthy-brown); /* Vintage contrast */
+    box-shadow: 0px 0px 12px rgba(255, 179, 121, 0.8), 
+                0px 0px 18px rgba(236, 254, 202, 0.5); /* Dual-layer glow effect */
+    transform: scale(1.05); /* Slight scale effect to enhance the "flicker" */
 }
 
 .navImage {

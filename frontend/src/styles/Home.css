@@ -5,15 +5,13 @@ a, .react-router-dom .link{
     color: inherit;
 }
 
-.homeContainer {
-}
-
 .headerContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--secondary-color);
     padding-left: 20px;
+    background-color: var(--color-pale-yellow);
+    box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
 }
 
 .buttonContainer {
@@ -21,32 +19,51 @@ a, .react-router-dom .link{
     display: flex;
     justify-content: center;
     gap: 20px;
+
 }
 
+button {
+    font-weight: var(--font-weight-semibold);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Login & Logout Buttons - Elegant, Minimalist */
 .loginButton, .logoutButton {
-    border: none;
-
-    padding: 10px 20px;
-    border-radius: 20px;
+    border: 1px solid rgba(163, 104, 91, 0.5); /* Earthy brown with transparency */
     background-color: var(--white-color);
-    cursor: pointer;
+    color: var(--color-dark-brown);
     font-weight: var(--font-weight-semibold);
 }
 
-.registerButton {
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    background-color: var(--accent-color);
-    color: white;
-    cursor: pointer;
-    font-weight: var(--font-weight-semibold);
-}
-
+/* Hover Effect: Soft Paper Glow */
 .loginButton:hover, .logoutButton:hover {
-    background-color: #f2f2f2;
+    background-color: rgba(245, 225, 200, 0.6); /* Light beige glow */
+    border-color: var(--color-earthy-brown);
+    box-shadow: 0 2px 5px rgba(163, 104, 91, 0.2);
 }
 
+/* Register Button - Warm, Vintage */
+.registerButton {
+    background-color: var(--color-earthy-brown);
+    color: white;
+    border: 1px solid rgba(163, 104, 91, 0.7); /* Soft earthy tone */
+}
+
+/* Hover Effect: Deep, Classic Academia Red */
 .registerButton:hover {
-    background-color: #4a2316;
+    background-color: var(--color-deep-red);
+    border-color: var(--color-dark-brown);
+    box-shadow: 0px 0px 8px rgba(148, 65, 51, 0.3); /* Subtle glowing effect */
+}
+
+.searchContainer {
+    display: flex;
+}
+
+.searchBarContainer {
+    display: flex;
+    justify-content: center;
 }

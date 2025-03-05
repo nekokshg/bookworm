@@ -26,8 +26,9 @@ const Home = ({isAuthenticated, logoutUser}) => {
                     </div>
                 )}
             </div>
-
-            <SearchBar />
+            <div className='searchBarContainer'>
+                <SearchBar />
+            </div>
         </div>
     )
 }

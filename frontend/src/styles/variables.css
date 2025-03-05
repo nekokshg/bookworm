@@ -1,9 +1,23 @@
 :root {
-    --primary-color: #c76b2a;
-    --secondary-color: #f0c260;
-    --accent-color: #5e2d20;
-    --background-color: #211210;
-    --white-color: white;
+    --color-deep-purple: #100b2a;
+    --color-dark-purple: #2a213a;
+    --color-deep-teal: #314743;
+    --color-moss-green: #65856d;
+    --color-light-green: #adca9a;
+    --color-pastel-yellow: #ecfeca;
+    --color-deep-red: #582d27;
+    --color-dark-red: #974133;
+    --color-warm-orange: #d67654;
+    --color-muted-purple: #5d3441;
+    --color-earthy-brown: #a3685b;
+    --color-soft-orange: #ffb379;
+    --color-pale-yellow: #ffe6a9;
+    --color-white: #ffffff;
+    --color-light-beige:#f5e1c8;
+    --color-mocha:#b5835a;
+    --color-dark-brown:#5e2d20;
+    --color-light-brown:#8b5e3b;
+
     --font-family: 'Inter', sans-serif;  /* Set the Inter font as the default */
     --font-weight-normal: 400;           /* Normal weight */
     --font-weight-semibold: 600;         /* Semibold weight */
