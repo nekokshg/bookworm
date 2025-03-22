@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import BookList from '../components/BookList';
-import { getBooksByTitleOrIsbn, getBooksByGenres } from '../services/bookAPI';
+import { getBooksByTitleOrIsbn, getBooksByGenres, getBooksByAuthors, getBooksByTags } from '../services/bookAPI';
 import '../styles/Search.css';
 
 const Search = () => {
@@ -22,10 +22,14 @@ const Search = () => {
         const fetchData = async () => {
             try {
                 let data = [];
-                if (queryParams.title) {
+                if (queryParams.title || queryParams.isbn) {
                     data = await getBooksByTitleOrIsbn(queryParams);
                 } else if (queryParams.genres) {
                     data = await getBooksByGenres(queryParams);
+                } else if (queryParams.authors) {
+                    data = await getBooksByAuthors(queryParams);
+                } else if (queryParams.tags) {
+                    data = await getBooksByTags(queryParams);
                 }
 
                 if (data) {

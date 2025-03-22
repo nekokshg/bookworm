@@ -151,84 +151,6 @@ const voteOnTagForBook = async (req, res) => {
     }
 };
 
-//Query and get books with the optional search and filter parameters
-const filterAndGetBooks = async (req,res) => {
-    const { title, authors, genre, tag, publishedYear, minReviewRating, isbn } = req.query;
-    const query = {}; //Query object that will be used to filter books in the database
-
-    //Filter by title (optional)
-    if (title) {
-        //If a title filter is provided, use a case-insensitive regular expression to match the title
-        query.title = { $regex: title, $options: 'i' }; //i = case-insensitive search
-    }
-
-    //Filter by authors (optional)
-    if (authors) {
-        console.log(authors)
-        const authorsArray = authors.split(',').map(a => a.trim());
-        // Ensure the book has ALL the given author names in some form (accounting for the fact that the user might be lazy and only put in first name not full name)
-        query.$and = authorsArray.map(name => ({
-            authors: { $regex: name, $options: 'i' }
-        }));
-    }
-
-    //Filter by genre (optional)
-    //When a user filters by multiple genres (e.g., Romance and Action), want to apply AND logic and return books that match both genres
-    /**
-     * Note: in MongoDB
-     * -use $in operator to match any of the selected genres (OR logic)
-     * -use $all to match all of the selected genres (AND logic)
-     */
-    if (genre) {
-        const genresArray = genre.split(',').map(g => g.trim()); //Split the generes passed as a comma-separated list (e.g., Romance, Historical) and remove extra spaces
-        query.genres = { $all: genresArray }; //Match any books that has all of the genres in the array
-    }
-
-    //Filter by tag (optional)
-    if (tag) {
-        const tagsArray = tag.split(',').map(t => t.trim());
-        const tags = await Tag.find({ name: { $in: tagsArray }}); //Find the tag documents from the Subgenre model that match any of the names in the subgenresArray. Gives the subgenre IDs that'll be used for filtering the books
-        if (tags.length > 0) {
-            query.tags = { $all: tags.map(t => t._id)}; //If valid tags exist, filter books that have all the tag IDs
-        }
-    }   
-
-    //Filter by published year (optional)
-    if (publishedYear) {
-        query.publishedYear = publishedYear;
-    }
-
-    //Filter by minimum review rating (optional)
-    if (minReviewRating) {
-        //Query Review model and find books that have a rating >= minReviewRating
-        const booksWithGoodReviews = await Review.aggregate([ //Aggregation query allows the performance of complex operations on the data in the database (e.g., filter, group, sort, and transform data)
-            {$match: { rating: { $gte: minReviewRating }}}, //Match reviews with ratings >= minReviewRating
-            {$group: {_id: "$bookId"}} //Group by bookId to get the list of bookIds with good reviews
-        ]);
-        const bookIds = booksWithGoodReviews.map(review => review._id);
-        query._id = {$in: bookIds}; //Don't need to check if the book has all of the book IDs from the aggregation query. We just need to find books that match any of the valid bookIds that have reviews >= minReviewRating
-    }
-
-    if (isbn) {
-        const isbnArray = isbn.split(',').map(i => i.trim()); //Convert input into an array
-        query.isbns = {$in: isbnArray}; //Match any book that has one of the isbns in the input array
-    }
-
-    try {
-        let books = await Book.find(query)
-            .populate('tags') //Tells Mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
-        
-        //Check if the query has genres, tags or authors we do not want to create a book then
-        if (books.length === 0 && (title || isbn) && !minReviewRating && !genre && !tag && !authors && !publishedYear) {
-            console.log('No books found, attempting to create');
-            books = await createBook(req.query);
-        }
-        res.status(200).json(books);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching books', error });
-    }
-}
-
 //Get book by title or isbn
 //If there is no book with the title or isbn we must create it (e.g., use Open Library API)
 const getBookByTitleOrIsbn = async (req, res) => {
@@ -279,6 +201,7 @@ const getBooksByAuthors = async (req, res) => {
     try {
         const books = await Book.find(query)
             .populate('tags')
+            .populate('genres')
         res.status(200).json(books);
     } catch (error) {
         res.status(500).json({message: 'Error fetching books by author(s)', error})
@@ -313,7 +236,9 @@ const getBooksByGenres = async (req,res) => {
         }
 
         // Query books using the genre IDs
-        const books = await Book.find({ genres: { $all: genreIds } }).populate('tags');
+        const books = await Book.find({ genres: { $all: genreIds } })
+            .populate('tags')
+            .populate('genres')
 
         res.status(200).json(books);
     } catch (error) {
@@ -335,6 +260,7 @@ const getBooksByTags = async (req, res) => {
     try {
         const books = await Book.find(query)
             .populate('tags')
+            .populate('genres')
         res.status(200).json(books);
     } catch (error) {
         res.status(500).json({message: 'Error fetching books by tag(s)', error})
@@ -421,6 +347,8 @@ module.exports= {
     voteOnTagForBook, 
     getBookByTitleOrIsbn, 
     getBooksByGenres,
+    getBooksByAuthors,
+    getBooksByTags,
     updateBookById, 
     favoriteBook, 
     deleteBookById };

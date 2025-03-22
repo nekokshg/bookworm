@@ -13,7 +13,6 @@ const loadGenres = async () => {
 
 //Convert genre array to ids
 const genresToIds = (genreArr) => {
-    console.log(genreLookup);
     return genreArr
         .map(genre => genreLookup[genre.toLowerCase()]) //Convert name to ID
         .filter(Boolean) //Remove undefined values (genres that don't exist)

@@ -3,11 +3,12 @@
 const express = require('express');
 const router = express.Router();
 const { 
-    createBook, 
     addTagToBook, 
     voteOnTagForBook, 
     getBookByTitleOrIsbn, 
     getBooksByGenres,
+    getBooksByAuthors,
+    getBooksByTags,
     updateBookById, 
     favoriteBook, 
     deleteBookById 
@@ -21,6 +22,12 @@ router.get('/find', getBookByTitleOrIsbn);
 
 //GET request to get books based on genres
 router.get('/find/genres', getBooksByGenres);
+
+//GET request to get books based on authors
+router.get('/find/authors', getBooksByAuthors);
+
+//GET request to get books based on tags
+router.get('/find/tags', getBooksByTags);
 
 //PATCH: Update parts (or all) of a book
 router.patch('/:bookId', updateBookById);
