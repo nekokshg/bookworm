@@ -35,8 +35,7 @@
 .navItem:hover {
     background-color: var(--color-soft-orange); /* Warm glow */
     border-color: var(--color-earthy-brown); /* Vintage contrast */
-    box-shadow: 0px 0px 12px rgba(255, 179, 121, 0.8), 
-                0px 0px 18px rgba(236, 254, 202, 0.5); /* Dual-layer glow effect */
+    box-shadow: 0px 0px 12px var(--color-pale-yellow);
     transform: scale(1.05); /* Slight scale effect to enhance the "flicker" */
 }
 

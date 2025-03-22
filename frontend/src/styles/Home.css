@@ -10,7 +10,7 @@ a, .react-router-dom .link{
     align-items: center;
     justify-content: space-between;
     padding-left: 20px;
-    background-color: var(--color-pale-yellow);
+    background-color: var(--color-soft-orange);
     box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
 }
 

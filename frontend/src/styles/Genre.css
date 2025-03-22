@@ -1,0 +1,21 @@
+@import './variables.css';
+
+/* Genre List Container */
+.genreList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    justify-content: left; /* Center genres */
+    overflow: hidden;
+}
+
+/* Genre Card Styling */
+.genreItem {
+    background-color: var(--color-soft-orange); /* Light background */
+    border-radius: 10px;
+    padding: 4px;
+    font-size: 12px;
+    text-transform: capitalize; /* Makes first letter uppercase */
+}

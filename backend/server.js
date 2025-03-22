@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const { loadGenres } = require('./controllers/genreController');
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,9 @@ app.use(cors());
 
 //Connect to MongoDB
 connectDB();
+
+//Load genres into hashmap
+loadGenres();
 
 //Middleware setup
 app.use(express.json());

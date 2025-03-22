@@ -22,11 +22,8 @@ const bookSchema = mongoose.Schema({
         type: String,
         required: true,
     }],
-    genres: [{
-        type: String, //Store genres as strings (e.g., ["Fantasy", "Romance"])
-        required: false,
-    }],
-    tags: [{
+    genres: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre' }], // Stores Genre IDs,
+    tags: [{ //Descriptive searchable keywords (e.g., slow burn, dark academia)
         tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag' },
         popularityCount: { type: Number, default: 0 },  // Popularity count for this tag on the specific book
     }],

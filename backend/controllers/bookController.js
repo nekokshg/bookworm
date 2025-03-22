@@ -15,9 +15,11 @@ const Book = require('../models/book');
 const Review = require('../models/review');
 const Tag = require('../models/tag');
 const User = require('../models/user');
+const Genre = require('../models/genre');
 
 const { createTag, updateTagPopularity } = require('../controllers/tagController');
 const { fetchByTitle, fetchByISBN } = require('../utils/openLibraryAPI');
+const { genresToIds } = require('../controllers/genreController');
 
 //Get book by title
 const getBook = async(title) => {
@@ -53,12 +55,17 @@ const createBook = async (searchQuery) => {
             //Else, create the book by the isbn
             bookData = await fetchByISBN(isbn);
         }
+
+        let genreArr = bookData.genres;
+
+        //Convert genres to their respective IDs
+        genreArr = genresToIds(genreArr);
   
         // Create a new book if data is valid
         const newBook = new Book({
             title: bookData.title,
             authors: bookData.authors,
-            genres: [], //<= fix later will implement ML to categorize book title and description to genres
+            genres: genreArr,
             tags: [], //Tags are added later by the users
             description: bookData.description,
             publishedYear: bookData.publishedYear,
@@ -147,7 +154,6 @@ const voteOnTagForBook = async (req, res) => {
 //Query and get books with the optional search and filter parameters
 const filterAndGetBooks = async (req,res) => {
     const { title, authors, genre, tag, publishedYear, minReviewRating, isbn } = req.query;
-    console.log(req.query)
     const query = {}; //Query object that will be used to filter books in the database
 
     //Filter by title (optional)
@@ -223,6 +229,123 @@ const filterAndGetBooks = async (req,res) => {
     }
 }
 
+//Get book by title or isbn
+//If there is no book with the title or isbn we must create it (e.g., use Open Library API)
+const getBookByTitleOrIsbn = async (req, res) => {
+    const { title, isbn } = req.query;
+    query = {};
+
+    if (title) {
+        //if title query is provided, use a case-insensitive regular express to match the title
+        query.title = { $regex: title, $options: 'i'};
+    }
+    if (isbn) {
+        //isbn in the book model is a array
+        const isbnArray = isbn.split(',').map(i => i.trim()); //Convert input into an array
+        query.isbns = {$in: isbnArray}; //Match any book that has one of the isbns in the input array
+    }
+
+    try {
+        let books = await Book.find(query)
+            .populate('tags') //Tells mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
+            .populate('genres')
+
+        //Attempt to create a book if its not found
+        if (books.length === 0) {
+            console.log('No books found, attempting to create');
+            books = await createBook(req.query);
+            books = books[0]
+            books = await Book.findById(books._id).populate('genres');
+        }
+        res.status(200).json(books);
+        } catch (error) {
+        res.status(500).json({message: 'Error fetching book by title or isbn', error});
+    }
+}
+
+//Get books by authors
+const getBooksByAuthors = async (req, res) => {
+    const { authors } = req.query;
+    query = {};
+    if (authors) {
+        const authorsArray = authors.split(',').map(a => a.trim());
+        //Ensure the book has ALL the given author names in some form
+        //Accounts for the fact that the user might be lazy and only put first name and not full name
+        query.$and = authorsArray.map(name => ({
+            authors: {$regex: name, $options: 'i'}
+        }));
+    }
+
+    try {
+        const books = await Book.find(query)
+            .populate('tags')
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching books by author(s)', error})
+    }
+}
+
+//Get books by genres
+const getBooksByGenres = async (req,res) => {
+    const { genres }  = req.query;
+    query = {};
+    if (!genres) {
+        return res.status(400).json({ message: 'Genres parameter is required' });
+    }
+
+    try {
+        // Convert the user-inputted genre names into an array
+        let genresArray = genres.split(',').map(g => g.trim().toLowerCase());
+
+        // Find matching genres using both "name" and "keywords"
+        const genreDocs = await Genre.find({
+            $or: [
+                { name: { $in: genresArray } },       // Direct name match
+                { keywords: { $in: genresArray } }    // Match with keywords
+            ]
+        });
+
+        // Extract genre IDs
+        const genreIds = genreDocs.map(genre => genre._id);
+
+        if (genreIds.length === 0) {
+            return res.status(404).json({ message: 'No matching genres found' });
+        }
+
+        // Query books using the genre IDs
+        const books = await Book.find({ genres: { $all: genreIds } }).populate('tags');
+
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching books by genre(s)', error})
+    }
+}
+
+//Get books by tag
+const getBooksByTags = async (req, res) => {
+    const { tags } = req.query;
+    query = {};
+    if (tags) {
+        let tagsArray = tags.split(',').map(t => t.trim().toLowerCase());
+
+        query.tags = {
+            $all: tagsArray.map(t => ({$regex: t, $options: 'i'})) // Ensures fuzzy matching
+        };
+    }
+    try {
+        const books = await Book.find(query)
+            .populate('tags')
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({message: 'Error fetching books by tag(s)', error})
+    }
+}
+
+//Get books by filtering by reviews, ratings, tags, genres, and authors
+const filterBooks = async (req, res) => {
+
+}
+
 //Update an existing book 
 const updateBookById = async (req, res) => {
     try {
@@ -292,4 +415,12 @@ const deleteBookById = async (req, res) => {
     }
 }
 
-module.exports= { createBook, addTagToBook, voteOnTagForBook, filterAndGetBooks, updateBookById, favoriteBook, deleteBookById };
+module.exports= { 
+    createBook, 
+    addTagToBook, 
+    voteOnTagForBook, 
+    getBookByTitleOrIsbn, 
+    getBooksByGenres,
+    updateBookById, 
+    favoriteBook, 
+    deleteBookById };
