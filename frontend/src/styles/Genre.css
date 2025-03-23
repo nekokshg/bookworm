@@ -9,13 +9,24 @@
     padding: 0;
     justify-content: left; /* Center genres */
     overflow: hidden;
+    margin-bottom: 7px;
 }
 
 /* Genre Card Styling */
 .genreItem {
-    background-color: var(--color-soft-orange); /* Light background */
-    border-radius: 10px;
-    padding: 4px;
+    background-color: var(--color-light-green);     /* soft sage background */
+    color: var(--color-dark-brown);                 /* deep espresso text */
+    border: 1px solid var(--color-earthy-brown);    /* subtle border */
+    border-radius: 8px;
+    padding: 2px 6px; /* reduced vertical and horizontal padding */
     font-size: 12px;
-    text-transform: capitalize; /* Makes first letter uppercase */
+    text-transform: capitalize;
+    font-weight: var(--font-weight-semibold);
+    transition: background-color 0.2s ease;
+}
+
+.genreItem:hover {
+    cursor: pointer;
+    background-color: var(--color-earthy-brown);   /* saddle brown on hover */
+    color: var(--white-color);                     /* warm white text */
 }

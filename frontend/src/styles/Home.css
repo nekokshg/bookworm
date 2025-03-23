@@ -1,6 +1,6 @@
-@import './variables.css'; 
+@import './variables.css';
 
-a, .react-router-dom .link{
+a, .react-router-dom .link {
     text-decoration: none;
     color: inherit;
 }
@@ -10,8 +10,8 @@ a, .react-router-dom .link{
     align-items: center;
     justify-content: space-between;
     padding-left: 20px;
-    background-color: var(--color-soft-orange);
-    box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
+    background-color: var(--color-light-green); /* D0E8D0 */
+    box-shadow: 2px 2px 5px rgba(176, 196, 176, 0.2); /* Soft green-gray shadow */
 }
 
 .buttonContainer {
@@ -19,45 +19,46 @@ a, .react-router-dom .link{
     display: flex;
     justify-content: center;
     gap: 20px;
-
 }
 
 button {
+    font-family: var(--font-family);
     font-weight: var(--font-weight-semibold);
-    padding: 10px 20px;
+    font-size: var(--font-size-base);
+    padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    line-height: var(--line-height);
 }
 
-/* Login & Logout Buttons - Elegant, Minimalist */
+/* Login & Logout Buttons - Minimal & Clean */
 .loginButton, .logoutButton {
-    border: 1px solid rgba(163, 104, 91, 0.5); /* Earthy brown with transparency */
-    background-color: var(--white-color);
-    color: var(--color-dark-brown);
-    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--color-earthy-brown);  /* B2D3C2 */
+    background-color: var(--white-color);         /* White */
+    color: var(--color-dark-brown);               /* #333 */
 }
 
-/* Hover Effect: Soft Paper Glow */
+/* Hover Effect: Soft Mint Glow */
 .loginButton:hover, .logoutButton:hover {
-    background-color: rgba(245, 225, 200, 0.6); /* Light beige glow */
-    border-color: var(--color-earthy-brown);
-    box-shadow: 0 2px 5px rgba(163, 104, 91, 0.2);
+    background-color: var(--color-light-green);   /* D0E8D0 */
+    border-color: var(--color-dark-green);        /* 6DA34D */
+    box-shadow: 0 2px 6px rgba(109, 163, 77, 0.2); /* green glow */
 }
 
-/* Register Button - Warm, Vintage */
+/* Register Button - Clean & Natural */
 .registerButton {
-    background-color: var(--color-earthy-brown);
-    color: white;
-    border: 1px solid rgba(163, 104, 91, 0.7); /* Soft earthy tone */
+    background-color: var(--color-earthy-brown);  /* B2D3C2 */
+    color: var(--white-color);               /* #333 */
+    border: 1px solid var(--color-dark-green);    /* 6DA34D */
 }
 
-/* Hover Effect: Deep, Classic Academia Red */
+/* Hover Effect: Muted Green Accent */
 .registerButton:hover {
-    background-color: var(--color-deep-red);
-    border-color: var(--color-dark-brown);
-    box-shadow: 0px 0px 8px rgba(148, 65, 51, 0.3); /* Subtle glowing effect */
-}
+    background-color: var(--color-deep-red);      /* #8B5E3C – warm earthy tone */
+    border-color: var(--color-earthy-brown);      /* #354F52 – dark forest green */
+    box-shadow: 0 0 8px rgba(82, 121, 111, 0.3);   /* subtle olive-green glow (from dark-green) */
+  }
 
 .searchContainer {
     display: flex;

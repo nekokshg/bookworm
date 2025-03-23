@@ -1,0 +1,95 @@
+@import './variables.css';
+
+.bookInfoContainer {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(60, 47, 35, 0.1);
+    border: 1px solid rgba(169, 132, 103, 0.15); /* transparent earthy-brown */
+    transition: box-shadow 0.3s ease;
+}
+  
+.bookHeader {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.bookCover {
+  width: 180px;
+  height: 270px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(60, 47, 35, 0.2);
+}
+
+.bookMainInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.bookTitle {
+  font-size: 22px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-dark-brown);
+}
+
+.bookAuthors,
+.bookPublished {
+  font-size: 14px;
+  color: var(--color-earthy-brown);
+  margin-bottom: 8px;
+}
+
+.bookTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tagItem {
+  background-color: var(--color-light-green);
+  color: var(--color-dark-brown);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid var(--color-earthy-brown);
+}
+
+.bookDetailDescription {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-dark-brown);
+  white-space: pre-line;
+}
+
+.bookTagsSection {
+  margin-top: 2rem;
+}
+
+.tagList {
+  list-style: none;
+  padding: 0;
+}
+
+.tagItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.tagVotes {
+  font-size: 0.9em;
+  color: var(--color-dark-brown);
+}
+
+.addTagForm {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}

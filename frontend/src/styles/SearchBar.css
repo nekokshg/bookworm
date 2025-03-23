@@ -1,98 +1,98 @@
-.searchContainer{
+.searchContainer {
     display: flex;
     justify-content: center;
     padding: 20px;
 }
 
-.searchForm{
+.searchForm {
     display: flex;
     align-items: center;
     width: 100%;
     width: 500px;
     border-radius: 10px;
     gap: 10px;
+    background-color: var(--white-color);
+    padding: 6px 10px;
+    box-shadow: 0 4px 12px rgba(60, 47, 35, 0.1);
+    border: 1px solid rgba(169, 132, 103, 0.15); /* transparent earthy-brown */
+    transition: box-shadow 0.3s ease;
 }
 
-.searchInput{
+
+.searchInput {
     flex: 1;
-    font-size: var(--font-size-base);
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid rgba(220, 220, 220, 1);
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-earthy-brown);
+    background-color: var(--white-color);
+    color: var(--color-dark-brown);
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
-.searchInput:focus{
-    border: 1px solid rgba(163, 104, 91, 0.5);
-    box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
+.searchInput:focus {
+    border-color: var(--color-dark-green);
+    box-shadow: 0 0 6px rgba(108, 88, 76, 0.2);
 }
 
 .submitButton {
-    border: 1px solid rgba(163, 104, 91, 0.5); /* Soft earthy border */
-    padding: 10px 15px;
+    background-color: var(--color-earthy-brown);
+    color: var(--white-color);
+    border: 1px solid var(--color-dark-green);
+    padding: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
     cursor: pointer;
-    border-radius: 10px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    
-    /* Soft parchment-like background */
-    background-color: var(--color-light-beige);
-    color: var(--color-dark-brown);
+    transition: all 0.3s ease-in-out;
 }
 
-/* Hover Effect: Elegant, Warm, Bookish */
 .submitButton:hover {
-    background-color: var(--color-mocha); /* Rich vintage brown */
-    border-color: var(--color-dark-brown);
-    color: var(--color-white);
-    box-shadow: 0px 2px 6px rgba(163, 104, 91, 0.3); /* Soft glow */
+    background-color: var(--color-deep-red);
+    border-color: var(--color-earthy-brown);
+    box-shadow: 0 0 6px rgba(82, 121, 111, 0.3);
 }
 
-.submitImage{
-    width: 20px;
-    height: 20px;
+.submitImage {
+    width: 26px;
+    height: 26px;
     object-fit: contain;
 }
 
 .searchSelect {
-    /* General Styling */
-    appearance: none; /* Hides default dropdown arrow */
-    background-color: var(--color-light-beige); /* Soft parchment tone */
-    color: var(--color-dark-brown); /* Ink-like text */
-    border: 1px solid rgba(163, 104, 91, 0.5); /* Thin earthy brown border */
+    appearance: none;
+    background-color: var(--white-color);
+    color: var(--color-dark-brown);
+    border: 1px solid var(--color-earthy-brown);
     font-weight: var(--font-weight-semibold);
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
-
-    /* Custom Dropdown Arrow */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235e2d20'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+    transition: all 0.2s ease-in-out;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233E2C23'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
+    background-position: right 10px center;
     background-size: 16px;
-    padding-right: 30px; /* Adjust for custom dropdown arrow */
+    padding-right: 30px;
 }
 
-/* Removes the default black outline when clicked */
 .searchSelect:focus {
-    outline: none; /* Removes the default thick black outline */
-    border-color: var(--color-dark-brown); /* Darker border for focus */
-    box-shadow: 0 0 8px rgba(163, 104, 91, 0.4); /* Soft glowing effect */
-    background-color: rgba(245, 225, 200, 0.8); /* Warmer parchment glow */
+    outline: none;
+    border-color: var(--color-dark-green);
+    box-shadow: 0 0 6px rgba(108, 88, 76, 0.2);
+    background-color: var(--color-light-green);
 }
 
-/* Hover Effect */
 .searchSelect:hover {
-    background-color: rgba(245, 225, 200, 0.8); /* Warm, subtle highlight */
-    border-color: var(--color-dark-brown);
+    background-color: var(--color-light-green);
+    border-color: var(--color-dark-green);
 }
 
-/* Dropdown Options */
 .searchSelect option {
-    background-color: var(--color-light-beige);
+    background-color: var(--white-color);
     color: var(--color-dark-brown);
 }

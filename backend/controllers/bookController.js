@@ -90,28 +90,28 @@ const addTagToBook = async (req, res) => {
         const { bookId } = req.params;
         const { tagName } = req.body;
 
-        const book = await Book.findById(bookId);
-        if (!book) return res.status(404).json({ message: 'Book not found' });
+        const book = await Book.findById(bookId)
+            .populate('tags.tagId')
 
-        // Check if the book already has this tag
+        if (!book) return res.status(404).json({ message: 'Book not found' });
         const tagExists = book.tags.some(t => t.tagId.name.toLowerCase() === tagName.toLowerCase());
         if (tagExists) return res.status(400).json({ message: 'Tag is already added to this book' });
-
-        // Use TagController to create or fetch the tag
+       
         let tag = await createTag(tagName);  // Create or find the tag by name
-
         // Add tag to the book's tags array (book-specific popularityCount is 0)
         book.tags.push({
             tagId: tag._id,
-            popularityCount: 0,  // Initially, the popularity count for this book is 0
+            popularityCount: 1,
         });
-
         await book.save();
 
         // Increment the global popularity count of the tag using TagController
         await updateTagPopularity(tag._id, 1);  // Increment global popularity by 1
-
-        res.status(200).json(book);
+        
+        const populatedBook = await Book.findById(bookId)
+            .populate('tags.tagId')
+            .populate('genres')
+        res.status(200).json(populatedBook);
     } catch (error) {
         res.status(500).json({ message: 'Error adding tag to book', error });
     }
@@ -145,11 +145,28 @@ const voteOnTagForBook = async (req, res) => {
         // Update the global popularity count of the tag using TagController
         await updateTagPopularity(tagId, vote);  // Update global popularity (increment or decrement)
 
-        res.status(200).json(book);
+        const populatedBook = await Book.findById(bookId)
+            .populate('tags.tagId')
+            .populate('genres')
+        res.status(200).json(populatedBook);
     } catch (error) {
         res.status(500).json({ message: 'Error voting on tag for book', error });
     }
 };
+
+//Get book by id
+const getBookById = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id)
+            .populate('tags.tagId')
+            .populate('genres')
+        console.log(book)
+        if (!book) return res.status(404).json({ message: 'Book not found' });
+        res.status(200).json(book);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting book by id', error});
+    }
+}
 
 //Get book by title or isbn
 //If there is no book with the title or isbn we must create it (e.g., use Open Library API)
@@ -169,7 +186,7 @@ const getBookByTitleOrIsbn = async (req, res) => {
 
     try {
         let books = await Book.find(query)
-            .populate('tags') //Tells mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
+            .populate('tags.tagId') //Tells mongoose to replace the tags field (which contains an array of tag IDs) with the actual tag documents
             .populate('genres')
 
         //Attempt to create a book if its not found
@@ -200,7 +217,7 @@ const getBooksByAuthors = async (req, res) => {
 
     try {
         const books = await Book.find(query)
-            .populate('tags')
+            .populate('tags.tagId')
             .populate('genres')
         res.status(200).json(books);
     } catch (error) {
@@ -237,7 +254,7 @@ const getBooksByGenres = async (req,res) => {
 
         // Query books using the genre IDs
         const books = await Book.find({ genres: { $all: genreIds } })
-            .populate('tags')
+            .populate('tags.tagId')
             .populate('genres')
 
         res.status(200).json(books);
@@ -259,7 +276,7 @@ const getBooksByTags = async (req, res) => {
     }
     try {
         const books = await Book.find(query)
-            .populate('tags')
+            .populate('tags.tagId')
             .populate('genres')
         res.status(200).json(books);
     } catch (error) {
@@ -345,6 +362,7 @@ module.exports= {
     createBook, 
     addTagToBook, 
     voteOnTagForBook, 
+    getBookById,
     getBookByTitleOrIsbn, 
     getBooksByGenres,
     getBooksByAuthors,

@@ -1,4 +1,4 @@
-@import './variables.css'; 
+@import './variables.css';
 
 li {
     list-style: none;
@@ -12,21 +12,23 @@ h3 {
     display: flex;
     align-items: center;
     gap: 20px;
-    background-color: #f5e1c8; /* Light beige color for the book card */
+    background-color: var(--white-color); /* Creamy parchment */
+    
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px; /* Adds space between books */
+    margin-bottom: 10px;
     transition: transform 0.2s ease-in-out;
-    border-bottom: 2px solid #b5835a; /* Thin line below each book item */
+
+    border: 1px solid var(--color-earthy-brown);     /* Soft saddle brown outline */
+    box-shadow: 3px 3px 5px rgba(60, 47, 35, 0.1);     /* Soft shadow for depth */
 }
 
-/* Adds a small hover effect */
+
 .bookItem:hover {
     transform: scale(1.02);
 }
 
-.bookInfoContainer {
+.bookCardInfoContainer {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -34,38 +36,49 @@ h3 {
     overflow: hidden;
 }
 
-.bookImage {
+.bookCardImage {
     width: 100px;
     height: 150px;
     object-fit: cover;
     border-radius: 5px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 4px rgba(60, 47, 35, 0.2); /* deeper wood shadow */
 }
 
-.bookTitle {
+.bookCardImage:hover {
+    cursor: pointer;
+}
+
+.bookCardTitle {
     font-size: 18px;
     font-weight: bold;
-    color: #5e2d20; /* Dark brown for contrast */
-    margin-bottom: 5px;
+    color: var(--color-dark-brown); /* Deep espresso */
 }
 
-.bookAuthor {
+.bookCardAuthors {
     font-size: 14px;
-    color: #8b5e3b; /* Slightly lighter brown */
-    margin-bottom: 5px;
+    color: var(--color-earthy-brown); /* Warm saddle tone */
+    margin-top: 0;
+    margin-bottom: 7px;
 }
 
-.bookRating {
-    font-size: 14px;
-    color: #ffd700; /* Gold for a rating effect */
+.bookCardTitle:hover,
+.bookCardAuthor:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
-.bookDescription {
+.bookCardRating {
     font-size: 14px;
+    color: #FFD700; /* Gold for ratings — still fits the palette */
+}
+
+.bookCardDescription {
+    font-size: 13px;
     margin: 0;
+    color: var(--color-dark-green); /* Olive-bark for description */
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limits description to 3 lines */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }

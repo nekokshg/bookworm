@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import searchBook from '../assets/search-book.svg'
+import searchBook from '../assets/search-book.png'
 import '../styles/SearchBar.css'
 
 const SearchBar = () => {

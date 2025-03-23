@@ -1,4 +1,4 @@
-@import './variables.css'; 
+@import './variables.css';
 
 .navContainer {
     display: flex;
@@ -8,37 +8,48 @@
     left: 0;
     width: 72px;
     height: 100%;
-
-    border: 1px solid rgba(163, 104, 91, 0.5); /* 50% opacity */
-    box-shadow: 2px 2px 5px rgba(163, 104, 91, 0.1);
+    background-color: var(--white-color); /* #FDFBF7 */
+    border-right: 1px solid var(--color-earthy-brown); /* #A98467 */
+    box-shadow: 2px 0 8px rgba(60, 47, 35, 0.1); /* deep brown softened */
 }
 
 .navList {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .navItem {
-    margin: 15px 0;
     width: 48px;
     height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    transition: background-color 0.3s;
+    background-color: transparent;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
 }
 
 .navItem:hover {
-    background-color: var(--color-soft-orange); /* Warm glow */
-    border-color: var(--color-earthy-brown); /* Vintage contrast */
-    box-shadow: 0px 0px 12px var(--color-pale-yellow);
-    transform: scale(1.05); /* Slight scale effect to enhance the "flicker" */
+    background-color: var(--color-light-green); /* #DDE5B6 */
+    border: 1px solid var(--color-dark-green);
+    box-shadow: 0px 0px 10px rgba(140, 130, 110, 0.3); /* sage + leather glow */
+
+    cursor: pointer;
 }
 
 .navImage {
     width: 20px;
+    filter: brightness(0) saturate(100%) invert(14%) sepia(8%) saturate(325%) hue-rotate(20deg) brightness(90%) contrast(85%);
+    /* Tints icon toward dark brown/olive */
+}
+
+.navLink.active .navImage {
+    border-bottom: 2px solid var(--color-deep-red);
+    padding-bottom: 2px;
 }

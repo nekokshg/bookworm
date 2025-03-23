@@ -5,6 +5,7 @@ const router = express.Router();
 const { 
     addTagToBook, 
     voteOnTagForBook, 
+    getBookById,
     getBookByTitleOrIsbn, 
     getBooksByGenres,
     getBooksByAuthors,
@@ -15,7 +16,10 @@ const {
 } = require('../controllers/bookController');
 
 //POST request to add a tag to a book
-router.post('/:bookId/add-tag', addTagToBook);
+router.post('/:bookId/tags', addTagToBook);
+
+//GET request to get book based on id
+router.get('/find/:id', getBookById);
 
 //GET request to get books based on title or isbn
 router.get('/find', getBookByTitleOrIsbn);
@@ -33,7 +37,7 @@ router.get('/find/tags', getBooksByTags);
 router.patch('/:bookId', updateBookById);
 
 //PATCH request to vote on a tag for a specific book
-router.patch('/:bookId/vote-tag/:tagId', voteOnTagForBook);
+router.patch('/:bookId/tags/:tagId/vote', voteOnTagForBook);
 
 //PATCH request to favorite or unfavorite a book
 router.patch('/:userId/favorite/:bookId', favoriteBook);

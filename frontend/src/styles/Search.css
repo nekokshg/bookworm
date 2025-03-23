@@ -11,7 +11,6 @@
 }
 
 .searchTitle{
-    background-color: var(--secondary-color);
     display: flex;
     justify-content: center;
 }

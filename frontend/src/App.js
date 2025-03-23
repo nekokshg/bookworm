@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
+import Book from './pages/Book';
 import Navbar from './components/Navbar';
 
 const App = () => {
@@ -38,7 +39,7 @@ const App = () => {
               <Route path='/register' element={isAuthenticated ? <Navigate to='/profile' /> : <Register setIsAuthenticated={setIsAuthenticated}/>} />
 
               <Route path ='/search' element={<Search />} />
-
+              <Route path="/book/:id" element={<Book />} />
               {/* Private Routes */}
               <Route 
                 path='/profile'

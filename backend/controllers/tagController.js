@@ -20,6 +20,7 @@ const createTag = async (tagName) => {
             })
             await tag.save();
         }
+        console.log(tag)
         return tag;
     } catch (error) {
         throw new Error('Error creating tag');
