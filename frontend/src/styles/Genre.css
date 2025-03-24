@@ -29,4 +29,5 @@
     cursor: pointer;
     background-color: var(--color-earthy-brown);   /* saddle brown on hover */
     color: var(--white-color);                     /* warm white text */
+    text-decoration: underline;
 }

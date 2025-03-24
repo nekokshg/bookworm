@@ -1,0 +1,74 @@
+@import './variables.css';
+
+.registerContainer {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white-color);
+}
+
+.registerCard {
+  background-color: var(--white-color);
+  border: 1px solid rgba(169, 132, 103, 0.2);
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(60, 47, 35, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.registerTitle {
+  font-size: 22px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-dark-brown);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.registerInput {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-earthy-brown);
+  background-color: #fcfaf5;
+  font-size: 14px;
+  color: var(--color-dark-brown);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.registerInput:focus {
+  outline: none;
+  border-color: var(--color-dark-green);
+  box-shadow: 0 0 0 2px rgba(108, 88, 76, 0.2);
+}
+
+.registerButton_ {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-dark-green);
+  color: var(--white-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.registerButton_:hover {
+  background-color: var(--color-earthy-brown);
+}
+
+.registerError {
+  color: var(--color-deep-red);
+  font-size: 13px;
+  text-align: center;
+}

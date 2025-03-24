@@ -82,3 +82,32 @@ h3 {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+.bookCardTagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    justify-content: left; /* Center genres */
+    overflow: hidden;
+    margin-bottom: 7px;
+}
+
+.bookCardTagItem {
+    background-color: var(--color-warm-yellow);
+    color: var(--color-dark-brown);                 /* deep espresso text */
+    border: 1px solid var(--color-earthy-brown);    /* subtle border */
+    border-radius: 8px;
+    padding: 2px 6px; /* reduced vertical and horizontal padding */
+    font-size: 12px;
+    font-weight: var(--font-weight-semibold);
+    transition: background-color 0.2s ease;
+}
+
+.bookCardTagItem:hover {
+    background-color: var(--color-earthy-brown); 
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+}

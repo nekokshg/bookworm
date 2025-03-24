@@ -24,10 +24,20 @@ const BookCard = ({ book }) => {
           ))}
         </h4>
         <GenreList genres={book.genres} />
+        <ul className='bookCardTagList'>
+          {book.tags.map(tag => (
+            <li key={tag._id} className='bookCardTagItem'>
+              <span>{tag.tagId.name}</span>
+            </li>
+          ))}
+        </ul>
         <p
           className="bookCardDescription"
           dangerouslySetInnerHTML={{
-            __html: book.description.replace(/\n/g, '<br>'),
+            __html: book.description
+              .replace(/\r\n|\r/g, '\n')
+              .replace(/\n{2,}/g, '<br>') 
+              .replace(/\n/g, '<br>'),
           }}
         ></p>
       </div>

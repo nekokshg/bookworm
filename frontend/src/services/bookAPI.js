@@ -14,7 +14,6 @@ const getBookById = async (id) => {
 const getBooksByTitleOrIsbn = async (query) => {
     try{
         const response = await axios.get(`/api/books/find`, {params: query});
-        console.log(response.data)
         return response.data;
     } catch(error) {
         console.error('Error finding book by title or isbn', error);

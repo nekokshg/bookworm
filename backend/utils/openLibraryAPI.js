@@ -36,7 +36,6 @@ const fetchByTitle = async (title) => {
             const genresArray = subjectToGenre(response.subjects);
             if (genresArray.length !== 0) {
                 bookData.genres = genresArray;
-                console.log(bookData.genres)
             }
         }
 
@@ -82,7 +81,6 @@ const fetchByISBN = async (isbn) => {
         if(response.subjects) {
             const genresArray = subjectToGenre(response.subjects);
             if (genresArray.length !== 0) {
-                console.log(genresArray)
                 bookData.genres = genresArray;
             }
         }
@@ -109,7 +107,6 @@ const fetchByISBN = async (isbn) => {
 const subjectToGenre = (subjects) => {
     const matchedGenres = new Set();
     let genresArray = subjects.map(s => s.trim().toLowerCase());
-    console.log(genresArray)
     genresArray = genresArray
         .map(s => keywordGenreMap[s])
         .filter(Boolean) //Shortcut for removing falsy values

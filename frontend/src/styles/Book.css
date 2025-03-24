@@ -9,6 +9,7 @@
     box-shadow: 0 4px 12px rgba(60, 47, 35, 0.1);
     border: 1px solid rgba(169, 132, 103, 0.15); /* transparent earthy-brown */
     transition: box-shadow 0.3s ease;
+    cursor:default
 }
   
 .bookHeader {
@@ -23,6 +24,7 @@
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 2px 2px 8px rgba(60, 47, 35, 0.2);
+  margin-top: 2vh;
 }
 
 .bookMainInfo {
@@ -32,16 +34,21 @@
 }
 
 .bookTitle {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: var(--font-weight-bold);
+  margin-bottom: 4px;
+  margin-top: 8px;
   color: var(--color-dark-brown);
 }
 
 .bookAuthors,
 .bookPublished {
   font-size: 14px;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-earthy-brown);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  margin-top: 0;
+  line-height: 1.4;
 }
 
 .bookTags {
@@ -51,45 +58,193 @@
   margin-top: 10px;
 }
 
-.tagItem {
-  background-color: var(--color-light-green);
-  color: var(--color-dark-brown);
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  border: 1px solid var(--color-earthy-brown);
-}
-
-.bookDetailDescription {
+.bookDescription {
   font-size: 15px;
   line-height: 1.6;
   color: var(--color-dark-brown);
   white-space: pre-line;
 }
 
-.bookTagsSection {
-  margin-top: 2rem;
+.bookTagsSection h3, .bookGenresSection h3 {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 8px;
+  color: var(--color-dark-green);
 }
 
 .tagList {
-  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 0;
+  margin: 0;
+  margin-bottom: 8px;
+  max-height: 120px; /* or whatever height fits your design */
+  overflow-y: auto;
+  padding-right: 6px; /* to avoid scroll bar covering content */
 }
 
 .tagItem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  margin-bottom: 8px;
+  background-color: var(--color-warm-yellow);
+  color: var(--color-dark-brown);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 1px solid var(--color-earthy-brown);
+  box-shadow: 1px 1px 4px rgba(60, 47, 35, 0.08);
+  max-width: 200px; /* optional limit */
+  font-weight: var(--font-weight-semibold);
 }
 
-.tagVotes {
-  font-size: 0.9em;
+.tagItem.voting:hover {
+  background-color: var(--color-warm-yellow-hover);
+  cursor: pointer;
+}
+
+.tagItem.displayOnly:hover {
+  background-color: var(--color-earthy-brown); 
+  cursor: pointer;
+}
+
+.tagItem span:hover {
+  text-decoration: underline;
+}
+
+.tagVoteButtons {
+  display: flex;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.voteButton {
+  font-size: 12px;
+  padding: 3px 6px;
+  background-color: transparent;
+  border: 1px solid var(--color-dark-brown);
+  border-radius: 6px;
   color: var(--color-dark-brown);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.voteButton:hover {
+  background-color: var(--color-dark-brown);
+  color: var(--white-color);
 }
 
 .addTagForm {
-  margin-top: 10px;
   display: flex;
-  gap: 8px;
+  gap: 10px; 
+  max-width: 400px;
+}
+
+.addTagForm input {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-earthy-brown);
+  font-size: 12px;
+  outline: none;
+}
+
+.addTagForm input:focus {
+  border-color: var(--color-dark-green);
+  box-shadow: 0 0 6px rgba(108, 88, 76, 0.2);
+}
+
+.addTagForm button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-dark-green);
+  color: var(--white-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addTagForm button:hover {
+  background-color: var(--color-earthy-brown);
+}
+
+.bookDescription br {
+  display: block;
+  content: '';
+  margin-bottom: 1em; /* or 0.75em, depending on how much space you want */
+}
+
+.tagControls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.voteToggle {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-dark-brown);
+  border: 1px solid var(--color-earthy-brown);
+  border-radius: 6px;
+  background-color: var(--white-color);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.voteToggle:hover {
+  background-color: #f1ebe1; /* very subtle hover effect */
+}
+
+.voteToggle input {
+  margin-right: 6px;
+  accent-color: var(--color-dark-green); /* modern checkbox color support */
+}
+
+.tagFilterSelect {
+  padding: 5px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid var(--color-earthy-brown);
+  background-color: var(--white-color);
+  color: var(--color-dark-brown);
+  font-weight: 500;
+  outline: none;
+}
+
+.tagFilterSelect:focus {
+  border-color: var(--color-dark-green);
+  box-shadow: 0 0 6px rgba(108, 88, 76, 0.2);
+}
+
+.tagList.displayOnly {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+}
+
+.tagItem.displayOnly {
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 8px;
+  max-width: fit-content;
+}
+
+.tagItem.displayOnly:hover {
+  color: white;
+}
+
+.bookAuthor:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

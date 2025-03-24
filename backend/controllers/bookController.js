@@ -20,6 +20,7 @@ const Genre = require('../models/genre');
 const { createTag, updateTagPopularity } = require('../controllers/tagController');
 const { fetchByTitle, fetchByISBN } = require('../utils/openLibraryAPI');
 const { genresToIds } = require('../controllers/genreController');
+const { formatDescription } = require('../utils/formatText');
 
 //Get book by title
 const getBook = async(title) => {
@@ -60,6 +61,8 @@ const createBook = async (searchQuery) => {
 
         //Convert genres to their respective IDs
         genreArr = genresToIds(genreArr);
+
+        let formattedDescription = formatDescription(bookData.description)
   
         // Create a new book if data is valid
         const newBook = new Book({
@@ -67,7 +70,7 @@ const createBook = async (searchQuery) => {
             authors: bookData.authors,
             genres: genreArr,
             tags: [], //Tags are added later by the users
-            description: bookData.description,
+            description: formattedDescription,
             publishedYear: bookData.publishedYear,
             coverImage: bookData.coverImage,  // Store the cover image URL
             OLKey: bookData.OLKey,
@@ -160,7 +163,7 @@ const getBookById = async (req, res) => {
         const book = await Book.findById(req.params.id)
             .populate('tags.tagId')
             .populate('genres')
-        console.log(book)
+
         if (!book) return res.status(404).json({ message: 'Book not found' });
         res.status(200).json(book);
     } catch (error) {
@@ -234,6 +237,7 @@ const getBooksByGenres = async (req,res) => {
     }
 
     try {
+        
         // Convert the user-inputted genre names into an array
         let genresArray = genres.split(',').map(g => g.trim().toLowerCase());
 
@@ -247,7 +251,6 @@ const getBooksByGenres = async (req,res) => {
 
         // Extract genre IDs
         const genreIds = genreDocs.map(genre => genre._id);
-
         if (genreIds.length === 0) {
             return res.status(404).json({ message: 'No matching genres found' });
         }
@@ -266,23 +269,36 @@ const getBooksByGenres = async (req,res) => {
 //Get books by tag
 const getBooksByTags = async (req, res) => {
     const { tags } = req.query;
-    query = {};
-    if (tags) {
-        let tagsArray = tags.split(',').map(t => t.trim().toLowerCase());
-
-        query.tags = {
-            $all: tagsArray.map(t => ({$regex: t, $options: 'i'})) // Ensures fuzzy matching
-        };
+    if (!tags) {
+      return res.status(400).json({ message: 'Tags parameter is required' });
     }
+  
     try {
-        const books = await Book.find(query)
-            .populate('tags.tagId')
-            .populate('genres')
-        res.status(200).json(books);
+      const tagsArray = tags.split(',').map(t => t.trim().toLowerCase());
+  
+      // Find matching tags by name (case-insensitive)
+      const tagDocs = await Tag.find({
+        name: { $in: tagsArray.map(t => new RegExp(t, 'i')) }
+      });
+  
+      const tagIds = tagDocs.map(tag => tag._id);
+  
+      if (tagIds.length === 0) {
+        return res.status(404).json({ message: 'No matching tags found' });
+      }
+  
+      const books = await Book.find({
+        'tags.tagId': { $in: tagIds }
+      })
+      .populate('tags.tagId')
+      .populate('genres');
+  
+      res.status(200).json(books);
     } catch (error) {
-        res.status(500).json({message: 'Error fetching books by tag(s)', error})
+      res.status(500).json({ message: 'Error fetching books by tag(s)', error });
     }
-}
+  };
+  
 
 //Get books by filtering by reviews, ratings, tags, genres, and authors
 const filterBooks = async (req, res) => {

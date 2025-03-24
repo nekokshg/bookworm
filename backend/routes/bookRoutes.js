@@ -18,12 +18,6 @@ const {
 //POST request to add a tag to a book
 router.post('/:bookId/tags', addTagToBook);
 
-//GET request to get book based on id
-router.get('/find/:id', getBookById);
-
-//GET request to get books based on title or isbn
-router.get('/find', getBookByTitleOrIsbn);
-
 //GET request to get books based on genres
 router.get('/find/genres', getBooksByGenres);
 
@@ -32,6 +26,12 @@ router.get('/find/authors', getBooksByAuthors);
 
 //GET request to get books based on tags
 router.get('/find/tags', getBooksByTags);
+
+//GET request to get books based on title or isbn
+router.get('/find', getBookByTitleOrIsbn);
+
+//GET request to get book based on id
+router.get('/find/:id', getBookById);
 
 //PATCH: Update parts (or all) of a book
 router.patch('/:bookId', updateBookById);
