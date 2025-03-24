@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import Search from './pages/Search';
 import Book from './pages/Book';
 import Navbar from './components/Navbar';
+import ConfirmEmail from './pages/ConfirmEmail';
+
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,6 +39,11 @@ const App = () => {
               {/* Only show login or register if the user is NOT authenticated */}
               <Route path='/login' element={isAuthenticated ? <Navigate to='/profile' /> : <Login setIsAuthenticated={setIsAuthenticated}/>} />
               <Route path='/register' element={isAuthenticated ? <Navigate to='/profile' /> : <Register setIsAuthenticated={setIsAuthenticated}/>} />
+              
+              <Route
+                path="/confirm-email"
+                element={<ConfirmEmail setIsAuthenticated={setIsAuthenticated} />}
+              />
 
               <Route path ='/search' element={<Search />} />
               <Route path="/book/:id" element={<Book />} />

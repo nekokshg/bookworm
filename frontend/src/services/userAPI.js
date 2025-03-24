@@ -39,4 +39,16 @@ const getUserProfile = async (token) => {
     }
 }
 
-export { registerUser, loginUser, getUserProfile}
+//Sends a GET request to the backend to get the user data after the user confirmed their email
+const confirmEmail = async(token) => {
+    try {
+        const response = await axios.get(`/api/users/confirm-email?token=${token}`);
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        console.error('Error confirming email', error);
+        throw error;
+    }
+}
+
+export { registerUser, loginUser, getUserProfile, confirmEmail}

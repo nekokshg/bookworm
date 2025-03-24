@@ -13,12 +13,15 @@ const Register = ({ setIsAuthenticated }) => {
     e.preventDefault();
     try {
       const response = await registerUser({ username, email, password });
-      localStorage.setItem('token', response.token);
-      setIsAuthenticated(true);
+      
+      // Don't log in yet — just show success message
+      alert(response.message || 'Registration successful. Please check your email.');
+      
     } catch (error) {
       setError('Error registering user, please try again.');
     }
   };
+  
 
   return (
     <div className="registerContainer">

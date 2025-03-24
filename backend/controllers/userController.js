@@ -6,7 +6,10 @@
  */
 
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const { generateToken } = require('../utils/tokenUtils');
+const {sendConfirmationEmail} = require('../services/emailService');
 
 const getUsers = async (req, res) => {
     try{
@@ -36,6 +39,7 @@ const getUserData = async (req, res) => {
 //Register a new user
 const registerUser = async (req, res) => {
     try {
+
         const { username, email, password } = req.body;
         const existingUser = await User.findOne({email});
         if (existingUser) return res.status(400).json({message: 'User already exists'});
@@ -43,9 +47,21 @@ const registerUser = async (req, res) => {
         //Create and save the new user, password will be automatically hashed by the schema
         const newUser = new User({username, email, password});
         await newUser.save();
-        //Generate a token for the user
-        const token = generateToken(newUser._id);
-        res.status(201).json({token, user: {username, email, favoriteBooks: newUser.favoriteBooks}});
+
+        // Create an email confirmation token
+        const emailToken = jwt.sign(
+        { userId: newUser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+        );
+
+        // Send confirmation email
+        await sendConfirmationEmail(newUser.email, emailToken);
+
+        res.status(201).json({
+        message: 'Registration successful. Please check your email to confirm your account.',
+        });
+
     } catch (error) {
         res.status(500).json({message: 'Error registering user', error});
     }
@@ -70,9 +86,42 @@ const loginUser = async (req, res) => {
     }
 }
 
+const confirmEmail = async (req, res) => {
+    try {
+      const { token } = req.query;
+
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+  
+      const user = await User.findById(payload.userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+  
+      if (user.isVerified) {
+        return res.status(400).json({ message: 'Email already confirmed.' });
+      }
+  
+      user.isVerified = true;
+      await user.save();
+  
+      return res.status(200).json({
+        message: 'Email confirmed successfully!',
+        token: generateToken(user._id),
+        user: {
+          username: user.username,
+          email: user.email,
+          favoriteBooks: user.favoriteBooks,
+        },
+      });
+      
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid or expired token', error });
+    }
+  };
+  
+
 module.exports = {
     getUsers,
     getUserData,
     registerUser,
     loginUser,
+    confirmEmail
 };

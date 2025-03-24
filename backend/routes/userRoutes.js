@@ -9,7 +9,8 @@ const {
     getUsers,
     getUserData,
     registerUser,
-    loginUser
+    loginUser,
+    confirmEmail
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -17,6 +18,8 @@ router.get('/', getUsers);
 
 //GET request (protected route): fetch user data
 router.get('/profile', authenticateToken, getUserData);
+
+router.get('/confirm-email', confirmEmail);
 
 //POST request for user registration
 router.post('/register', registerUser);
