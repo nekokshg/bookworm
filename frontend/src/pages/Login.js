@@ -16,11 +16,12 @@ const Login = ({ setIsAuthenticated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginUser({ usernameOrEmail, password });
-      localStorage.setItem('token', response.token);
-      setIsAuthenticated(true);
-    } catch (error) {
-      setError('Error logging in user, please try again');
+        const response = await loginUser({ usernameOrEmail, password });
+        localStorage.setItem('token', response.token);
+        setIsAuthenticated(true);
+      } catch (error) {
+        const msg = error.response?.data?.message || 'Error logging in user, please try again';
+        setError(msg);
     }
   };
 
