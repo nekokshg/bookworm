@@ -82,6 +82,9 @@ const Login = ({ setIsAuthenticated }) => {
               <a href='/forgot-password'>Forgot password?</a>
             </p>
           </div>
+          <p className='forgotPasswordLink'>
+            <a href='/register'>Don’t have an account? <strong>Sign up here</strong></a>
+          </p>
           <button type="submit" className="loginButton_">Login</button>
         </form>
       </div>

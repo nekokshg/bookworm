@@ -67,8 +67,12 @@
   background-color: var(--color-earthy-brown);
 }
 
-.registerError {
-  color: var(--color-deep-red);
+.registerMessage {
   font-size: 13px;
+  color: var(--color-dark-brown);
+  background-color: #f6f0e8;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
   text-align: center;
 }

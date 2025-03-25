@@ -7,19 +7,36 @@ const Register = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      password.length < 8 ||                      // Minimum length
+      !/[A-Z]/.test(password) ||                  // At least one uppercase letter
+      !/[0-9]/.test(password) ||                  // At least one number
+      !/[!@#$%^&*(),.?":{}|<>]/.test(password)    // At least one symbol
+    ) {
+      setMessage("Password must be at least 8 characters and include an uppercase letter, a number, and a symbol.");
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
+
     try {
       const response = await registerUser({ username, email, password });
       
       // Don't log in yet — just show success message
-      alert(response.message || 'Registration successful. Please check your email.');
+      setMessage(response.message || 'Registration successful. Please check your email.');
       
     } catch (error) {
-      setError('Error registering user, please try again.');
+      setMessage(error.response?.data?.message || 'Error registering user, please try again.');
     }
   };
   
@@ -29,7 +46,7 @@ const Register = ({ setIsAuthenticated }) => {
       <div className="registerCard">
         <h2 className="registerTitle">Create your account</h2>
         <form onSubmit={handleSubmit} className="registerForm">
-          {error && <div className="registerError">{error}</div>}
+          {message && <div className="registerMessage">{message}</div>}
           <input
             type="text"
             placeholder="Username"
@@ -54,6 +71,14 @@ const Register = ({ setIsAuthenticated }) => {
             className="registerInput"
             required
           />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder='Confirm password'
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className='registerInput'
+            required
+          />
           <label className='showPasswordToggle'>
             <input 
               type='checkbox'
@@ -62,6 +87,9 @@ const Register = ({ setIsAuthenticated }) => {
             />
             Show Password
           </label>
+          <p className='forgotPasswordLink'>
+            <a href='/login'>Already have an account? <strong>Login here</strong></a>
+          </p>
           <button type="submit" className="registerButton_">
             Register
           </button>

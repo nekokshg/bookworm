@@ -13,6 +13,16 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+        password.length < 8 ||                      // Minimum length
+        !/[A-Z]/.test(password) ||                  // At least one uppercase letter
+        !/[0-9]/.test(password) ||                  // At least one number
+        !/[!@#$%^&*(),.?":{}|<>]/.test(password)    // At least one symbol
+      ) {
+        setMessage("Password must be at least 8 characters and include an uppercase letter, a number, and a symbol.");
+        return;
+    }
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match.");
       return;

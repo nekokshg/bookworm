@@ -41,9 +41,15 @@ const registerUser = async (req, res) => {
     try {
 
         const { username, email, password } = req.body;
-        const existingUser = await User.findOne({email});
-        if (existingUser) return res.status(400).json({message: 'User already exists'});
-        
+        let existingUser = await User.findOne({username});
+        if (existingUser) return res.status(400).json({message: 'That username is already taken.'});
+
+        existingUser = await User.findOne({email});
+        if (existingUser) return res.status(400).json({message: 'An account with that email already exists.'});
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+            return res.status(400).json({ message: 'Password does not meet strength requirements' });
+        }
+          
         //Create and save the new user, password will be automatically hashed by the schema
         const newUser = new User({username, email, password});
         await newUser.save();
@@ -166,6 +172,9 @@ const resetPassword = async (req, res) => {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(payload.userId);
         if (!user) return res.status(404).json({message: 'No user found with that email'});
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+            return res.status(400).json({ message: 'Password does not meet strength requirements' });
+        }
         user.password = password;
         await user.save();
         res.status(200).json({message: 'Password reset successful!'});
