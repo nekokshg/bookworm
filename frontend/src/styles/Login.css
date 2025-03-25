@@ -89,6 +89,12 @@
   background-color: var(--color-earthy-brown);
 }
 
+.passwordContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .showPasswordToggle {
   display: flex;
   align-items: center;
@@ -97,4 +103,20 @@
   color: var(--color-dark-brown);
   margin-top: 6px;
   margin-bottom: 12px;
+}
+
+.forgotPasswordLink {
+  font-size: 13px;
+  color: var(--color-dark-brown);
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.forgotPasswordLink:hover {
+  color:var(--color-earthy-brown);
+}
+
+.forgotPasswordLink a {
+  text-decoration: underline;
+  cursor: pointer;
 }

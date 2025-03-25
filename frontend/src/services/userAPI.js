@@ -62,4 +62,25 @@ const resendConfirmationEmail = async (email) => {
     }
 }
 
-export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail}
+//Sends a POST request to create a reset request (email a password reset link)
+const sendResetLink = async (email) => {
+    try {
+        const response = await axios.post('/api/users/request-password-reset', {email});
+        return response.data;
+    } catch (error) {
+        console.error('Error requesting password reset', error);
+        throw error;
+    }
+}
+
+//Sends a PATCH request to reset the password
+const resetPassword = async (token, password) => {
+    try {
+        const response = await axios.patch('/api/users/reset-password', {token, password});
+        return response.data;
+    } catch (error) {
+        console.error('Error resetting password', error);
+        throw error;
+    }
+}
+export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail, sendResetLink, resetPassword}

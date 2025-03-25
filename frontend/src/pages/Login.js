@@ -69,14 +69,19 @@ const Login = ({ setIsAuthenticated }) => {
             className="loginInput"
             required
           />
-          <label className='showPasswordToggle'>
-            <input
-              type='checkbox'
-              checked={showPassword}
-              onChange={() => setShowPassword(!showPassword)}
-            />
-            Show Password
-          </label>
+          <div className='passwordContainer'>
+            <label className='showPasswordToggle'>
+              <input
+                type='checkbox'
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />
+              Show Password
+            </label>
+            <p className='forgotPasswordLink'>
+              <a href='/forgot-password'>Forgot password?</a>
+            </p>
+          </div>
           <button type="submit" className="loginButton_">Login</button>
         </form>
       </div>

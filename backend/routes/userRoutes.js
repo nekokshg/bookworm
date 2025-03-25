@@ -11,7 +11,9 @@ const {
     registerUser,
     loginUser,
     confirmEmail,
-    resendConfirmationEmail
+    resendConfirmationEmail,
+    sendResetLink,
+    resetPassword,
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -30,5 +32,11 @@ router.post('/login', loginUser);
 
 //POST request to resend confirmation email
 router.post('/resend-confirmation', resendConfirmationEmail);
+
+//POST request to send reset link
+router.post('/request-password-reset', sendResetLink);
+
+//PATCH request to reset password
+router.patch('/reset-password', resetPassword);
 
 module.exports = router;

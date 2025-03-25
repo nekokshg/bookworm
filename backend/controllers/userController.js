@@ -9,7 +9,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { generateToken } = require('../utils/tokenUtils');
-const {sendConfirmationEmail} = require('../services/emailService');
+const {sendConfirmationEmail, sendResetEmail} = require('../services/emailService');
 
 const getUsers = async (req, res) => {
     try{
@@ -121,12 +121,12 @@ const confirmEmail = async (req, res) => {
     }
   };
   
-  const resendConfirmationEmail = async (req, res) => {
+const resendConfirmationEmail = async (req, res) => {
     try {
         const {userNameorEmail} = req.body;
         const user = await User.findOne({userNameorEmail});
 
-        if (!user) return res.status(404).json({message: 'No user found with that email.'});
+        if (!user) return res.status(404).json({message: 'No user found with that email/username.'});
 
         if (user.isVerified) return res.status(400).json({message: 'Email is already confirmed'});
 
@@ -141,7 +141,38 @@ const confirmEmail = async (req, res) => {
     } catch (error) {
         res.status(500).json({message: 'Error resending confirmation email', error});
     }
-  }
+    }
+
+const sendResetLink = async (req, res) => {
+    try {
+        const {email} = req.body;
+        const user = await User.findOne({email});
+        if (!user) return res.status(404).json({message: 'No user found with that email'})
+        const token = jwt.sign(
+            {userId: user._id},
+            process.env.JWT_SECRET,
+            {expiresIn: '1h'}
+        );
+        await sendResetEmail(user.email, token);
+        res.status(200).json({message: 'Reset password link sent to email'})
+    } catch (error) {
+        res.status(500).json({message: 'Error sending reset link to email', error});
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const {token, password} = req.body;
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(payload.userId);
+        if (!user) return res.status(404).json({message: 'No user found with that email'});
+        user.password = password;
+        await user.save();
+        res.status(200).json({message: 'Password reset successful!'});
+    } catch (error) {
+        res.status(500).json({message: 'Error resetting password', error});
+    }
+}
 
 module.exports = {
     getUsers,
@@ -149,5 +180,7 @@ module.exports = {
     registerUser,
     loginUser,
     confirmEmail,
-    resendConfirmationEmail
+    resendConfirmationEmail,
+    sendResetLink,
+    resetPassword,
 };

@@ -26,6 +26,27 @@ const sendConfirmationEmail = (to, token) => {
   });
 };
 
+const sendResetEmail = async (to, token) => {
+  const resetURL = `http://localhost:3000/reset-password?token=${token}`;
+  const mailOptions = {
+    from: `"BookWorm" <${process.env.EMAIL_USER}>`,
+    to,
+    subject: 'Reset Your BookWorm Password',
+    html: `
+      <h2>Reset your password</h2>
+      <p>We received a request to reset your password.</p>
+      <p>
+        Click the link below to reset it:
+      </p>
+      <a href="${resetURL}" target="_blank">${resetURL}</a>
+      <p>If you didn’t request this, you can ignore this email.</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
 module.exports = {
   sendConfirmationEmail,
+  sendResetEmail
 };

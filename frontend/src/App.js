@@ -10,7 +10,8 @@ import Search from './pages/Search';
 import Book from './pages/Book';
 import Navbar from './components/Navbar';
 import ConfirmEmail from './pages/ConfirmEmail';
-
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,6 +46,8 @@ const App = () => {
                 element={<ConfirmEmail setIsAuthenticated={setIsAuthenticated} />}
               />
 
+              <Route path='/forgot-password' element={<ForgotPassword />} />
+              <Route path='/reset-password' element={<ResetPassword />} />
               <Route path ='/search' element={<Search />} />
               <Route path="/book/:id" element={<Book />} />
               {/* Private Routes */}
