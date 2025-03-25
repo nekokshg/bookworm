@@ -121,11 +121,33 @@ const confirmEmail = async (req, res) => {
     }
   };
   
+  const resendConfirmationEmail = async (req, res) => {
+    try {
+        const {userNameorEmail} = req.body;
+        const user = await User.findOne({userNameorEmail});
+
+        if (!user) return res.status(404).json({message: 'No user found with that email.'});
+
+        if (user.isVerified) return res.status(400).json({message: 'Email is already confirmed'});
+
+        const token = jwt.sign(
+            {userId: user._id},
+            process.env.JWT_SECRET,
+            {expiresIn: '1d'}
+        );
+
+        await sendConfirmationEmail(user.email, token);
+        res.status(200).json({message: 'Confirmation email resent'});
+    } catch (error) {
+        res.status(500).json({message: 'Error resending confirmation email', error});
+    }
+  }
 
 module.exports = {
     getUsers,
     getUserData,
     registerUser,
     loginUser,
-    confirmEmail
+    confirmEmail,
+    resendConfirmationEmail
 };

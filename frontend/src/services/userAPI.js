@@ -51,4 +51,15 @@ const confirmEmail = async(token) => {
     }
 }
 
-export { registerUser, loginUser, getUserProfile, confirmEmail}
+//Sends a POST request to resend the confirmation email
+const resendConfirmationEmail = async (email) => {
+    try {
+        const response = await axios.post('/api/users/resend-confirmation', {email});
+        return response.data;
+    } catch (error) {
+        console.error('Error resending confirmation email', error);
+        throw error;
+    }
+}
+
+export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail}

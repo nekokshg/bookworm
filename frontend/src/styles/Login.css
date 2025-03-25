@@ -72,3 +72,19 @@
   font-size: 13px;
   text-align: center;
 }
+
+.resendButton {
+  margin-top: 8px;
+  background-color: var(--color-dark-green);
+  color: var(--white-color);
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.resendButton:hover {
+  background-color: var(--color-earthy-brown);
+}

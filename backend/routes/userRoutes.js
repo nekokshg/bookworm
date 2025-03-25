@@ -10,7 +10,8 @@ const {
     getUserData,
     registerUser,
     loginUser,
-    confirmEmail
+    confirmEmail,
+    resendConfirmationEmail
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -26,5 +27,8 @@ router.post('/register', registerUser);
 
 //POST request for user login
 router.post('/login', loginUser);
+
+//POST request to resend confirmation email
+router.post('/resend-confirmation', resendConfirmationEmail);
 
 module.exports = router;
