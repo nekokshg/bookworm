@@ -88,3 +88,13 @@
 .resendButton:hover {
   background-color: var(--color-earthy-brown);
 }
+
+.showPasswordToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-dark-brown);
+  margin-top: 6px;
+  margin-bottom: 12px;
+}

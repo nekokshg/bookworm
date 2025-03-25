@@ -7,6 +7,7 @@ const Register = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -46,13 +47,21 @@ const Register = ({ setIsAuthenticated }) => {
             required
           />
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="registerInput"
             required
           />
+          <label className='showPasswordToggle'>
+            <input 
+              type='checkbox'
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
           <button type="submit" className="registerButton_">
             Register
           </button>

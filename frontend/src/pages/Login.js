@@ -11,6 +11,7 @@ import '../styles/Login.css';
 const Login = ({ setIsAuthenticated }) => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -61,13 +62,21 @@ const Login = ({ setIsAuthenticated }) => {
             required
           />
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="loginInput"
             required
           />
+          <label className='showPasswordToggle'>
+            <input
+              type='checkbox'
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
           <button type="submit" className="loginButton_">Login</button>
         </form>
       </div>
