@@ -90,7 +90,7 @@ const loginUser = async (req, res) => {
 
         //Generate token and return user data
         const token = generateToken(user._id);
-        res.status(200).json({token, user: {username: user.username, email: user.email, favoriteBooks: user.favoriteBooks}});
+        res.status(200).json({token, user: { _id: user._id, username: user.username, email: user.email, favoriteBooks: user.favoriteBooks}});
     } catch (error) {
         res.status(500).json({message: 'Error logging in user', error});
     }
@@ -116,6 +116,7 @@ const confirmEmail = async (req, res) => {
         message: 'Email confirmed successfully!',
         token: generateToken(user._id),
         user: {
+            _id: user._id,
           username: user.username,
           email: user.email,
           favoriteBooks: user.favoriteBooks,

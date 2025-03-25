@@ -248,3 +248,24 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.reviewItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  color: var(--color-dark-brown);
+}
+
+.reviewForm {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.reviewForm textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-earthy-brown);
+}

@@ -1,0 +1,30 @@
+@import './variables.css';
+
+.starRating {
+  display: flex;
+  gap: 4px;
+  font-size: 26px;
+}
+
+.star {
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.star_ {
+    color: #ccc;
+}
+
+/* Full star */
+.star.full, .star_.full {
+  color: var(--color-deep-red);
+}
+
+/* Half star with gradient mask */
+.star.half, .star_.half {
+  background: linear-gradient(to right, var(--color-deep-red) 50%, #ccc 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}

@@ -24,6 +24,7 @@ const ConfirmEmail = ({setIsAuthenticated}) => {
         const data = await confirmEmail(token);
         if (data.token) {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.user._id);
             setIsAuthenticated(true);
             navigate('/Profile');
           } else {

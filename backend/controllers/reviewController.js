@@ -28,6 +28,10 @@ const createReview = async (req, res) => {
         const user = await User.findById(userId);
         const book = await Book.findById(bookId);
         if (!user || !book) return res.status(400).json({message: 'User or Book not found'}); //400 (Bad request) request is valid but there is no data available
+        const existingReview = await Review.findOne({ userId, bookId });
+        if (existingReview) {
+          return res.status(400).json({ message: 'You have already reviewed this book.' });
+        }
         const newReview = new Review({
             userId,
             bookId,
@@ -35,7 +39,8 @@ const createReview = async (req, res) => {
             content,
         });
         await newReview.save();
-        res.status(201).json(newReview);
+        const populatedReview = await newReview.populate('userId', 'username');
+        res.status(201).json(populatedReview);
     } catch (error) {
         res.status(500).json({message: 'Error creating review', error});
     }
@@ -45,7 +50,8 @@ const createReview = async (req, res) => {
 const getAllReviewsForBook = async (req,res) => {
     try {
         const { bookId } = req.params;
-        const reviews = await Review.find({bookId}.populate('userId', 'username')); //Finds all reviews for a specific book and replaces the userId field in each review with the user's username from the User collection
+        const reviews = await Review.find({bookId})
+            .populate('userId', 'username') //Finds all reviews for a specific book and replaces the userId field in each review with the user's username from the User collection
         if (!reviews) return res.status(400).json({message: 'No reviews found for this book'});
         res.status(200).json(reviews);
     } catch (error) {

@@ -19,6 +19,7 @@ const Login = ({ setIsAuthenticated }) => {
     try {
         const response = await loginUser({ usernameOrEmail, password });
         localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.user._id);
         setIsAuthenticated(true);
       } catch (error) {
         const msg = error.response?.data?.message || 'Error logging in user, please try again';

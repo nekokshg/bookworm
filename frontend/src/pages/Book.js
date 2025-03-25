@@ -1,7 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getBookById, addTagToBook, voteOnTagForBook } from '../services/bookAPI';
+import { getReviewsForBook, createReview } from '../services/reviewAPI';
+import StarRating from '../components/StarRating';
 import GenreList from '../components/GenreList';
+import ReadOnlyStarRating from '../components/ReadOnlyStarRating';
 import '../styles/Book.css';
 
 const Book = () => {
@@ -10,6 +13,10 @@ const Book = () => {
   const [newTag, setNewTag] = useState('');
   const [votingEnabled, setVotingEnabled] = useState(false);
   const [sortType, setSortType] = useState('default');
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState('');
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -18,6 +25,17 @@ const Book = () => {
     };
 
     fetchBook();
+
+    const fetchReviews = async () => {
+      try {
+        const data = await getReviewsForBook(id);
+        setReviews(data);
+      } catch (err) {
+        console.error('Error getting reviews', err);
+      }
+    }
+  
+    fetchReviews();
   }, [id]);
 
   const handleAddTag = async (e) => {
@@ -28,8 +46,9 @@ const Book = () => {
       const updatedBook = await addTagToBook(id, newTag);
       setBook(updatedBook);
       setNewTag('');
+      setMessage('');
     } catch (err) {
-      console.error('Error adding tag:', err);
+      setMessage(err.response?.data?.message || 'Failed to add tag');
     }
   };
 
@@ -37,8 +56,31 @@ const Book = () => {
     try {
       const updatedBook = await voteOnTagForBook(id, tagId, voteValue);
       setBook(updatedBook);
+      setMessage('');
     } catch (err) {
-      console.error('Error voting on tag', err);
+      setMessage(err.response?.data?.message || 'Failed to vote on tag');
+    }
+  }
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!rating || !newReview.trim()) return;
+    const userId = localStorage.getItem('userId');
+    console.log(userId)
+    try {
+      const review = {
+        userId,
+        bookId: id,
+        rating,
+        content: newReview
+      }
+
+      const created = await createReview(review);
+      setReviews(prev => [created, ...prev]);
+      setNewReview('')
+      setRating(0);
+    } catch (err) {
+      console.error('Error submitting review:', err);
     }
   }
 
@@ -133,7 +175,35 @@ const Book = () => {
       />
 
       <div className="bookReviewContainer">
+        <h3>Reviews</h3>
 
+        {reviews.length === 0 ? (
+          <p>No reviews yet. Be the first to share your thoughts!</p>
+        ) : (
+          <ul className='reviewList'>
+            {reviews.map((review) => (
+              <li key={review._id} className='reviewItem'>
+                <strong>{review.userId.username}</strong>
+                <ReadOnlyStarRating rating={review.rating} />
+                <p>{review.content}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+        <form onSubmit={handleSubmitReview} className="reviewForm">
+          <label>
+            Rating:
+            <StarRating rating={rating} onChange={setRating} />
+          </label>
+
+          <textarea
+            placeholder="Write your review..."
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+          />
+
+          <button type="submit">Submit Review</button>
+        </form>
       </div>
     </div>
   );
