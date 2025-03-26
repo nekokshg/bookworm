@@ -87,6 +87,16 @@ const favoriteBook = async (userId, bookId) => {
     }
 }
 
+//Sends a PATCH request to bookmark or unbookmark a book
+const bookmarkBook = async (userId, bookId) => {
+    try {
+        const response = await axios.patch(`/api/books/${userId}/bookmark/${bookId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error bookmarking book');
+    }
+}
+
 export { 
     getBookById,
     getBooksByTitleOrIsbn,
@@ -95,5 +105,6 @@ export {
     getBooksByTags,
     addTagToBook,
     voteOnTagForBook,
-    favoriteBook
+    favoriteBook,
+    bookmarkBook
 }

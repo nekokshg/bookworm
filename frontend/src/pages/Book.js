@@ -1,6 +1,6 @@
 import { data, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getBookById, addTagToBook, voteOnTagForBook, favoriteBook } from '../services/bookAPI';
+import { getBookById, addTagToBook, voteOnTagForBook, favoriteBook, bookmarkBook } from '../services/bookAPI';
 import { getReviewsForBook, createReview } from '../services/reviewAPI';
 import { getUserProfile } from '../services/userAPI';
 import StarRating from '../components/StarRating';
@@ -46,20 +46,23 @@ const Book = () => {
   
     fetchReviews();
 
-    const checkFavoriteStatus = async () => {
+    const checkBookStatus = async () => {
       try {
         const token = localStorage.getItem('token');
-        console.log(token)
         const user = await getUserProfile(token);
-        console.log(user)
         if (user?.favoriteBooks?.includes(id)) {
           setIsFavorited(true);
+        }
+        if (user?.bookmarkedBooks?.includes(id)) {
+          setIsBookmarked(true);
         }
       } catch (err) {
         console.error('Error getting user profile')
       }
     };
-    checkFavoriteStatus();
+    checkBookStatus();
+
+
   }, [id]);
 
   const handleAddTag = async (e) => {
@@ -134,8 +137,19 @@ const Book = () => {
     }
   };
   
-  const handleBookmark = () => {
-    setIsBookmarked(prev => !prev);
+  const handleBookmark = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const data = await bookmarkBook(userId, id); // `id` is bookId
+  
+      if (data.message === 'Book bookmarked') {
+        setIsBookmarked(true);
+      } else if (data.message === 'Book unbookmarked') {
+        setIsBookmarked(false);
+      }
+    } catch (err) {
+      console.error('Error favoriting book', err);
+    }
   }
 
   return (

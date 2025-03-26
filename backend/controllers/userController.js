@@ -30,6 +30,7 @@ const getUserData = async (req, res) => {
             username: user.username,
             email: user.email,
             favoriteBooks: user.favoriteBooks,
+            bookmarkedBooks: user.bookmarkedBooks
         })
     } catch (error) {
         res.status(500).json({message: 'Error fetching user data'}, error);
@@ -120,6 +121,7 @@ const confirmEmail = async (req, res) => {
           username: user.username,
           email: user.email,
           favoriteBooks: user.favoriteBooks,
+          bookmarkedBooks: user.bookmarkedBooks
         },
       });
       

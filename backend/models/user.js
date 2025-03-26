@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
     }],
-    bookmarkBooks: [{
+    bookmarkedBooks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
     }],

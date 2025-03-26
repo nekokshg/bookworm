@@ -361,6 +361,30 @@ const favoriteBook = async (req, res) => {
     }
 }
 
+//Bookmark/unbookmark a book
+const bookmarkBook = async (req, res) => {
+    const {userId, bookId} = req.params;
+    try {
+        const user = await User.findById(userId);
+        const book = await Book.findById(bookId);
+
+        if (!user || !book) return res.status(400).json({message: 'User or book not found'});
+
+        //Check if the book is already bookmarked by user
+        const isBookmarked = user.bookmarkedBooks.includes(bookId);
+
+        if (isBookmarked) {
+            await User.findByIdAndUpdate(userId, {$pull: {bookmarkedBooks: bookId}});
+            return res.status(200).json({message: 'Book unbookmarked'});
+        } else {
+            await User.findByIdAndUpdate(userId, {$push: {bookmarkedBooks: bookId}});
+            return res.status(200).json({message: 'Book bookmarked'});
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Error handling bookmark/unbookmark', error});
+    }
+}
+
 //Delete an existing book by ID
 const deleteBookById = async (req, res) => {
     try{
@@ -385,4 +409,6 @@ module.exports= {
     getBooksByTags,
     updateBookById, 
     favoriteBook, 
-    deleteBookById };
+    deleteBookById,
+    bookmarkBook
+};

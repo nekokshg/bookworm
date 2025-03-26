@@ -12,7 +12,8 @@ const {
     getBooksByTags,
     updateBookById, 
     favoriteBook, 
-    deleteBookById 
+    deleteBookById,
+    bookmarkBook
 } = require('../controllers/bookController');
 
 //POST request to add a tag to a book
@@ -41,6 +42,8 @@ router.patch('/:bookId/tags/:tagId/vote', voteOnTagForBook);
 
 //PATCH request to favorite or unfavorite a book
 router.patch('/:userId/favorite/:bookId', favoriteBook);
+
+router.patch('/:userId/bookmark/:bookId', bookmarkBook);
 
 //DELETE: Delete a book
 router.delete('/:bookId', deleteBookById);
