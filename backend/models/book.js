@@ -58,7 +58,15 @@ const bookSchema = mongoose.Schema({
     isbns: [{
         type: String,
         required: false,
-    }]
+    }],
+    averageRating :{
+        type: Number,
+        default: 0
+    },
+    reviewCount: {
+        type: Number,
+        default: 0
+    }
 });
 
 const Book = mongoose.model('Book', bookSchema);

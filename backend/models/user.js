@@ -28,7 +28,11 @@ const userSchema = mongoose.Schema({
     favoriteBooks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
-    }]
+    }],
+    bookmarkBooks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+    }],
 });
 
 //Hash the password before saving a new user

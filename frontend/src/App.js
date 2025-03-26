@@ -55,6 +55,8 @@ const App = () => {
                 path='/profile'
                 element={isAuthenticated ? <Profile/> : <Navigate to='/login' />}
               />
+
+              
             </Routes>
           </div>
         </div>

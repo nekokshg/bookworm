@@ -12,7 +12,8 @@ const authenticateToken = (req,res,next) => {
         req.user = decoded; //Attach the userId to the request object
         next(); //Proceed to the next function (e.g., getUserData)
     } catch (error) {
-        return res.status(400).json({message: 'Invalid token'}, error);
+        console.error('JWT verification failed:', error.message);
+        return res.status(401).json({ message: 'Invalid token' });
     }
 }
 

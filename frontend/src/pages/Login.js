@@ -4,7 +4,7 @@
  * -After authentication, the backend returns a JWT Token
  * -The token is stored in localStorage, and the user is redirected to their Profile page (protected)
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { loginUser, resendConfirmationEmail } from '../services/userAPI';
 import '../styles/Login.css';
 
@@ -13,6 +13,14 @@ const Login = ({ setIsAuthenticated }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const expiredMsg = localStorage.getItem('expiredMessage');
+    if (expiredMsg) {
+      setError(expiredMsg);
+      localStorage.removeItem('expiredMessage'); // Clear it after showing
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

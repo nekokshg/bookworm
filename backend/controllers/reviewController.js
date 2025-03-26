@@ -39,6 +39,16 @@ const createReview = async (req, res) => {
             content,
         });
         await newReview.save();
+
+        const reviews = await Review.find( {bookId});
+        const totalRatings = reviews.reduce((sum, r) => sum + r.rating, 0);
+        const avgRating = totalRatings / reviews.length;
+
+        book.averageRating = avgRating;
+        book.reviewCount = reviews.length;
+
+        await book.save();
+
         const populatedReview = await newReview.populate('userId', 'username');
         res.status(201).json(populatedReview);
     } catch (error) {

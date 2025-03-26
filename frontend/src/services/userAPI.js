@@ -1,4 +1,5 @@
 import axios from 'axios';
+import instance from './axiosConfig';
 
 //Sends a POST request to the backend to register a user
 const registerUser = async (user) => {
@@ -27,7 +28,7 @@ const loginUser = async (user) => {
 //Sends a GET request to the backend to get the user data
 const getUserProfile = async (token) => {
     try{
-        const response = await axios.get('/api/users/profile', {
+        const response = await instance.get('/api/users/profile', {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

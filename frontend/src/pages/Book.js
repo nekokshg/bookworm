@@ -1,10 +1,15 @@
-import { useParams } from 'react-router-dom';
+import { data, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getBookById, addTagToBook, voteOnTagForBook } from '../services/bookAPI';
+import { getBookById, addTagToBook, voteOnTagForBook, favoriteBook } from '../services/bookAPI';
 import { getReviewsForBook, createReview } from '../services/reviewAPI';
+import { getUserProfile } from '../services/userAPI';
 import StarRating from '../components/StarRating';
 import GenreList from '../components/GenreList';
 import ReadOnlyStarRating from '../components/ReadOnlyStarRating';
+import heartIcon from '../assets/heart.svg';
+import heartFilledIcon from '../assets/heart-filled.svg';
+import bookmarkIcon from '../assets/bookmark.svg';
+import bookmarkFilledIcon from '../assets/bookmark-filled.svg';
 import '../styles/Book.css';
 
 const Book = () => {
@@ -17,11 +22,15 @@ const Book = () => {
   const [newReview, setNewReview] = useState('');
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState('');
+  const [avgRating, setAvgRating] = useState(0);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     const fetchBook = async () => {
       const data = await getBookById(id);
       setBook(data);
+      setAvgRating(data.averageRating);
     };
 
     fetchBook();
@@ -36,6 +45,21 @@ const Book = () => {
     }
   
     fetchReviews();
+
+    const checkFavoriteStatus = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log(token)
+        const user = await getUserProfile(token);
+        console.log(user)
+        if (user?.favoriteBooks?.includes(id)) {
+          setIsFavorited(true);
+        }
+      } catch (err) {
+        console.error('Error getting user profile')
+      }
+    };
+    checkFavoriteStatus();
   }, [id]);
 
   const handleAddTag = async (e) => {
@@ -66,7 +90,6 @@ const Book = () => {
     e.preventDefault();
     if (!rating || !newReview.trim()) return;
     const userId = localStorage.getItem('userId');
-    console.log(userId)
     try {
       const review = {
         userId,
@@ -96,9 +119,36 @@ const Book = () => {
     );
   }
 
+  const handleFavorite = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const data = await favoriteBook(userId, id); // `id` is bookId
+  
+      if (data.message === 'Book favorited') {
+        setIsFavorited(true);
+      } else if (data.message === 'Book unfavorited') {
+        setIsFavorited(false);
+      }
+    } catch (err) {
+      console.error('Error favoriting book', err);
+    }
+  };
+  
+  const handleBookmark = () => {
+    setIsBookmarked(prev => !prev);
+  }
+
   return (
     <div className="bookInfoContainer">
       <div className="bookHeader">
+        <div className='bookActions'>
+          <button className='favoriteButton' onClick={handleFavorite}>
+            <img src={isFavorited ? heartFilledIcon : heartIcon} alt='Favorite' />
+          </button>
+          <button className='bookmarkButton' onClick={handleBookmark}>
+            <img src={isBookmarked ? bookmarkFilledIcon : bookmarkIcon} alt='Bookmark' />
+          </button>
+        </div>
         <img className="bookCover" src={book.coverImage} alt={book.title} />
         <div className="bookMainInfo">
           <h2 className="bookTitle">{book.title}</h2>
@@ -112,7 +162,10 @@ const Book = () => {
             ))}
           </p>
           <p className="bookPublished">Published: {book.publishedYear}</p>
-
+          <div className='bookRatings'>
+            <ReadOnlyStarRating rating={avgRating} />
+            <p className='bookRatingVal'>{avgRating}</p>
+          </div>
           <div className='bookGenresSection'>
             <h3>Genres</h3>
             <GenreList genres={book.genres} />

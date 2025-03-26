@@ -77,6 +77,16 @@ const voteOnTagForBook = async (bookId, tagId, vote) => {
     }
 }
 
+//Sends a PATCH request to favorite or unfavorite a book
+const favoriteBook = async (userId, bookId) => {
+    try {
+        const response = await axios.patch(`/api/books/${userId}/favorite/${bookId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error favoriting book');
+    }
+}
+
 export { 
     getBookById,
     getBooksByTitleOrIsbn,
@@ -84,5 +94,6 @@ export {
     getBooksByAuthors,
     getBooksByTags,
     addTagToBook,
-    voteOnTagForBook
+    voteOnTagForBook,
+    favoriteBook
 }

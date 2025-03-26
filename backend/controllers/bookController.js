@@ -345,13 +345,13 @@ const favoriteBook = async (req, res) => {
 
         if (isFavorited) {
             //User wants to unfavorite, so decrement the popularity count
-            await Book.findById(bookId, {$inc: {popularity: -1 }});
+            await Book.findByIdAndUpdate(bookId, {$inc: {popularity: -1 }});
             //Remove the book from the user's favorites list
             await User.findByIdAndUpdate(userId, {$pull: {favoriteBooks: bookId}});
             return res.status(200).json({message: 'Book unfavorited'});
         } else {
             //User wants to favorite, so increment the popularity count
-            await Book.findById(bookId, {$inc: {popularity: 1}});
+            await Book.findByIdAndUpdate(bookId, {$inc: {popularity: 1}});
             //Add book to the user's favorites list
             await User.findByIdAndUpdate(userId, {$push: {favoriteBooks: bookId}});
             return res.status(200).json({message: 'Book favorited'});
