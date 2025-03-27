@@ -6,6 +6,8 @@
  */
 
 const User = require('../models/user');
+const Badge = require('../models/badge');
+const Trophy = require('../models/trophy');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { generateToken } = require('../utils/tokenUtils');
@@ -23,19 +25,39 @@ const getUsers = async (req, res) => {
 //Get user data from the database based on the token
 const getUserData = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        const user = await User.findById(userId);
-        if (!user) return res.status(404).json({message: 'User not found'});
-        res.status(200).json({
-            username: user.username,
-            email: user.email,
-            favoriteBooks: user.favoriteBooks,
-            bookmarkedBooks: user.bookmarkedBooks
-        })
+      const userId = req.user.userId;
+
+      const user = await User.findById(userId)
+          .populate('favoriteBooks')
+          .populate('bookmarkedBooks')
+          .populate('badges') // If you store badge/trophy IDs
+          .populate('trophies');
+  
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      res.status(200).json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        isVerified: user.isVerified,
+        avatarUrl: user.avatarUrl,
+        bio: user.bio,
+        favoriteGenres: user.favoriteGenres,
+        favoriteTags: user.favoriteTags,
+        xp: user.xp,
+        level: user.level,
+        booksCompleted: user.booksCompleted,
+        favoriteBooks: user.favoriteBooks,
+        bookmarkedBooks: user.bookmarkedBooks,
+        badges: user.badges,
+        trophies: user.trophies,
+        readingGoal: user.readingGoal || null,
+      });
     } catch (error) {
-        res.status(500).json({message: 'Error fetching user data'}, error);
+      res.status(500).json({ message: 'Error fetching user data', error });
     }
-}
+  };
+  
 
 //Register a new user
 const registerUser = async (req, res) => {
@@ -80,7 +102,7 @@ const loginUser = async (req, res) => {
         const { userNameorEmail, password } = req.body;
         const user = await User.findOne({userNameorEmail});
         if (!user) return res.status(400).json({ message: 'User not found' });
-
+        
         if (!user.isVerified) {
             return res.status(401).json({ message: 'Please confirm your email before logging in.' });
           }
@@ -91,7 +113,20 @@ const loginUser = async (req, res) => {
 
         //Generate token and return user data
         const token = generateToken(user._id);
-        res.status(200).json({token, user: { _id: user._id, username: user.username, email: user.email, favoriteBooks: user.favoriteBooks}});
+        res.status(200).json({
+            token,
+            user: {
+              _id: user._id,
+              username: user.username,
+              email: user.email,
+              avatarUrl: user.avatarUrl,
+              xp: user.xp,
+              level: user.level,
+              favoriteBooks: user.favoriteBooks,
+              bookmarkedBooks: user.bookmarkedBooks,
+            }
+          });
+          
     } catch (error) {
         res.status(500).json({message: 'Error logging in user', error});
     }
@@ -113,17 +148,19 @@ const confirmEmail = async (req, res) => {
       user.isVerified = true;
       await user.save();
   
-      return res.status(200).json({
-        message: 'Email confirmed successfully!',
-        token: generateToken(user._id),
+      res.status(200).json({
+        token,
         user: {
-            _id: user._id,
+          _id: user._id,
           username: user.username,
           email: user.email,
+          avatarUrl: user.avatarUrl,
+          xp: user.xp,
+          level: user.level,
           favoriteBooks: user.favoriteBooks,
-          bookmarkedBooks: user.bookmarkedBooks
-        },
-      });
+          bookmarkedBooks: user.bookmarkedBooks,
+        }
+      });      
       
     } catch (error) {
       res.status(400).json({ message: 'Invalid or expired token', error });
@@ -186,6 +223,21 @@ const resetPassword = async (req, res) => {
     }
 }
 
+const updateAvatar = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const {avatarUrl} = req.body;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {avatarUrl},
+      {new: true}
+    );
+    res.status(200).json({message: 'Avatar updated', avatarUrl: user.avatarUrl})
+  } catch (error) {
+    res.status(500).json({message: 'Error updating avatar', error})
+  }
+}
+
 module.exports = {
     getUsers,
     getUserData,
@@ -195,4 +247,6 @@ module.exports = {
     resendConfirmationEmail,
     sendResetLink,
     resetPassword,
+    updateAvatar,
+
 };

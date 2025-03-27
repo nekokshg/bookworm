@@ -25,6 +25,22 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    avatarUrl: {
+        type: String,
+        default: '',
+    },
+    bio: {
+        type: String,
+        default: '',
+    },
+    favoriteGenres : [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genre'
+    }],
+    favoriteTags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Tag'
+    }],
     favoriteBooks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
@@ -33,6 +49,39 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
     }],
+    booksCompleted: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book'
+    }],
+    xp: {
+        type: Number,
+        default: 0,
+    },
+    level: {
+        type: Number,
+        default: 1,
+    },
+    badges: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Badge',
+    }],
+    trophies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trophy',
+    }],
+    bookCircles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BookCircle',
+    }],
+    readingGoal: {
+        year: Number,           // e.g., 2025
+        goalCount: Number,      // total books they want to read
+        booksRead: [{           // array of Book IDs they’ve marked as read
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Book',
+        }]
+    },
+      
 });
 
 //Hash the password before saving a new user

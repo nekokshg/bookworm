@@ -1,0 +1,117 @@
+@import './variables.css';
+
+.avatarUploaderOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(40, 30, 20, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .avatarUploaderModal {
+    background-color: #fffdf7;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  .avatarUploaderModal h3 {
+    color: var(--color-dark-brown);
+    margin-bottom: 16px;
+  }
+  
+  .avatarPreview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    border: 2px solid var(--color-earthy-brown);
+  }
+  
+  .uploadButton {
+    display: inline-block;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white-color);
+    background-color: var(--color-dark-green);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .uploadButton input[type='file'] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .cancelButton {
+    background: none;
+    border: none;
+    color: var(--color-deep-red);
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+    
+  .cropContainer {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  
+  .cropControls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .cropControls input[type='range'] {
+    width: 80%;
+  }
+  
+  .confirmButton {
+    background-color: var(--color-dark-green);
+    color: var(--white-color);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .confirmButton:hover {
+    background-color: var(--color-earthy-brown);
+  }
+  
+  .uploadError {
+    color: var(--color-deep-red);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  
+  .reactEasyCrop_CropArea {
+    border-radius: 50% !important;
+  }
+  

@@ -1,0 +1,86 @@
+@import './variables.css';
+
+.profileContainer {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  background-color: var(--white-color);
+}
+
+.profileContent {
+  background-color: #fcfaf5;
+  border: 1px solid rgba(169, 132, 103, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 6px 20px rgba(60, 47, 35, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.profileTitle {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-dark-brown);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.profileError {
+  color: var(--color-deep-red);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.profileContent p {
+  font-size: 15px;
+  color: var(--color-dark-brown);
+  margin: 0;
+}
+
+.avatarWrapper {
+  position: relative;
+  cursor: pointer;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.avatarWrapper:hover .avatarImage {
+  transform: scale(1.03);
+}
+
+.avatarOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(108, 88, 76, 0.6); /* earthy brown overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.avatarWrapper:hover .avatarOverlay {
+  opacity: 1;
+}

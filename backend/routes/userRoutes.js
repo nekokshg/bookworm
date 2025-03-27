@@ -14,6 +14,7 @@ const {
     resendConfirmationEmail,
     sendResetLink,
     resetPassword,
+    updateAvatar,
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -38,5 +39,8 @@ router.post('/request-password-reset', sendResetLink);
 
 //PATCH request to reset password
 router.patch('/reset-password', resetPassword);
+
+//PATCH request to update avatar
+router.patch('/avatar', authenticateToken, updateAvatar);
 
 module.exports = router;

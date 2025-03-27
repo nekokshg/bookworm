@@ -44,7 +44,6 @@ const getUserProfile = async (token) => {
 const confirmEmail = async(token) => {
     try {
         const response = await axios.get(`/api/users/confirm-email?token=${token}`);
-        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error('Error confirming email', error);
@@ -84,4 +83,20 @@ const resetPassword = async (token, password) => {
         throw error;
     }
 }
-export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail, sendResetLink, resetPassword}
+
+//Sends a PATCH request to update the avatar
+const updateAvatar = async (token, base64Image) => {
+    try{
+        const response = await axios.patch('/api/users/avatar', 
+            {avatarUrl: base64Image}, 
+            {headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating avatar', error);
+        throw error;
+    }
+}
+export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail, sendResetLink, resetPassword, updateAvatar}
