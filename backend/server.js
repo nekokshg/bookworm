@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const genreRoutes = require('./routes/genreRoutes')
 const { loadGenres } = require('./controllers/genreController');
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/tags', tagRoutes);
+app.use('/api/genres', genreRoutes);
 
 // Add a route for the root URL
 app.get('/', (req, res) => {

@@ -238,6 +238,35 @@ const updateAvatar = async (req, res) => {
   }
 }
 
+const updateBio = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const {bio} = req.body;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {bio},
+      {new: true}
+    );
+    res.status(200).json({message: 'Bio updated', bio: user.bio})
+  } catch (error) {
+    res.status(500).json({message: 'Error updating bio', error})
+  }
+}
+
+const updateGenres = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const {favoriteGenres} = req.body;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {favoriteGenres},
+      {new: true}
+    );
+    res.status(200).json({message: 'Favorite genres updated', favoriteGenres: user.favoriteGenres})
+  } catch (error) {
+    res.status(500).json({message: 'Error updating favorite genres', error})
+  }
+}
 module.exports = {
     getUsers,
     getUserData,
@@ -248,5 +277,6 @@ module.exports = {
     sendResetLink,
     resetPassword,
     updateAvatar,
-
+    updateBio,
+    updateGenres,
 };

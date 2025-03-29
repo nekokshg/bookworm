@@ -15,6 +15,8 @@ const {
     sendResetLink,
     resetPassword,
     updateAvatar,
+    updateBio,
+    updateGenres,
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -42,5 +44,10 @@ router.patch('/reset-password', resetPassword);
 
 //PATCH request to update avatar
 router.patch('/avatar', authenticateToken, updateAvatar);
+
+//PATCH request to update bio
+router.patch('/bio', authenticateToken, updateBio);
+
+router.patch('/favorite-genres', authenticateToken, updateGenres)
 
 module.exports = router;

@@ -11,6 +11,12 @@ const loadGenres = async () => {
     console.log('Genres loaded into Hash Map')
 }
 
+//Get all genres
+const getGenres = async (req, res) => {
+    const genres = await Genre.find();
+    res.status(200).json(genres);
+}
+
 //Convert genre array to ids
 const genresToIds = (genreArr) => {
     return genreArr
@@ -20,6 +26,7 @@ const genresToIds = (genreArr) => {
 
 module.exports = {
     loadGenres,
+    getGenres,
     genreLookup,
     genresToIds
 }

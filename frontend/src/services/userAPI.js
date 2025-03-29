@@ -99,4 +99,47 @@ const updateAvatar = async (token, base64Image) => {
         throw error;
     }
 }
-export { registerUser, loginUser, getUserProfile, confirmEmail, resendConfirmationEmail, sendResetLink, resetPassword, updateAvatar}
+
+//Sends a PATCH request to update the user bio
+const updateUserBio = async (token, bio) => {
+    try {
+        const response = await axios.patch('/api/users/bio', 
+            {bio},
+            {headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating bio', error);
+        throw error;
+    }
+}
+
+const updateFavoriteGenres = async (token, genreIds) => {
+    try {
+        const response = await axios.patch('/api/users/favorite-genres', 
+            {favoriteGenres: genreIds},
+            {headers: {
+                Authorization: `Bearer ${token}`,
+            }}
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating favorite genres', error);
+        throw error
+    }
+}
+
+export { 
+    registerUser, 
+    loginUser, 
+    getUserProfile, 
+    confirmEmail, 
+    resendConfirmationEmail, 
+    sendResetLink, 
+    resetPassword, 
+    updateAvatar,
+    updateUserBio,
+    updateFavoriteGenres
+}
