@@ -1,1 +1,0 @@
-//A component that displays the tags associated with each book

@@ -84,6 +84,21 @@ const resetPassword = async (token, password) => {
     }
 }
 
+const updateProfile = async (token, profileData) => {
+    try {
+        const response = await axios.patch('/api/users/update-profile', 
+            profileData,
+            {headers: {
+                Authorization: `Bearer ${token}`,
+            }}
+        )
+        return response.data;
+    } catch (error) {
+        console.error('Error updating profile', error);
+        throw error;
+    }
+}
+
 //Sends a PATCH request to update the avatar
 const updateAvatar = async (token, base64Image) => {
     try{
@@ -141,5 +156,6 @@ export {
     resetPassword, 
     updateAvatar,
     updateUserBio,
-    updateFavoriteGenres
+    updateFavoriteGenres,
+    updateProfile
 }

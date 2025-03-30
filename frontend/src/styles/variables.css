@@ -7,7 +7,12 @@
     --white-color: #FDFBF7;         /* soft cream parchment */
     --color-warm-yellow: #F4E2B5; /* soft golden oat */
     --color-warm-yellow-hover: #E6B07C; /* Warm apricot clay */
-
+    --paper-texture: repeating-linear-gradient(
+        #fff,
+        #fff 28px,
+        #f7f1e9 29px,
+        #fff 30px
+      );
 
     --font-family: 'Inter', sans-serif;  /* Set the Inter font as the default */
     --font-weight-normal: 400;           /* Normal weight */

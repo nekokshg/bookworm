@@ -31,7 +31,8 @@ const getUserData = async (req, res) => {
           .populate('favoriteBooks')
           .populate('bookmarkedBooks')
           .populate('badges') // If you store badge/trophy IDs
-          .populate('trophies');
+          .populate('trophies')
+          .populate('favoriteGenres')
   
       if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -223,6 +224,25 @@ const resetPassword = async (req, res) => {
     }
 }
 
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const {bio, favoriteGenres, favoriteTags} = req.body;
+
+    const update = {};
+    if (bio !== undefined) update.bio = bio;
+    if (favoriteGenres) update.favoriteGenres = favoriteGenres;
+    if (favoriteTags) update.favoriteTags = favoriteTags;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, update, {new: true})
+      .populate('favoriteGenres', 'name')
+      
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({message: 'Failed to update profile', error});
+  }
+}
+
 const updateAvatar = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -279,4 +299,5 @@ module.exports = {
     updateAvatar,
     updateBio,
     updateGenres,
+    updateProfile
 };

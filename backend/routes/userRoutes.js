@@ -17,6 +17,7 @@ const {
     updateAvatar,
     updateBio,
     updateGenres,
+    updateProfile,
 } = require('../controllers/userController');
 
 //GET request for all users
@@ -41,6 +42,8 @@ router.post('/request-password-reset', sendResetLink);
 
 //PATCH request to reset password
 router.patch('/reset-password', resetPassword);
+
+router.patch('/update-profile', authenticateToken, updateProfile);
 
 //PATCH request to update avatar
 router.patch('/avatar', authenticateToken, updateAvatar);

@@ -1,28 +1,64 @@
 @import './variables.css';
 
-/* Container setup */
 .profileContainer {
+  padding: 2rem;
   max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 20px;
+  margin: 40px auto;
   background-color: var(--white-color);
-  color: var(--color-dark-brown);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(60, 47, 35, 0.1);
+  border: 1px solid rgba(169, 132, 103, 0.15); /* transparent earthy-brown */
+  transition: box-shadow 0.3s ease;
+  font-family: var(--font-body);
 }
 
-/* Title */
 .profileTitle {
-  font-size: 26px;
-  font-weight: var(--font-weight-bold);
-  margin-bottom: 24px;
-  color: var(--color-dark-brown);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-deep-red);
+  text-align: center;
 }
 
-/* Header: avatar + info side-by-side */
+.profileError {
+  color: var(--color-deep-red);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.profileEditToggle {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.editIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.editIcon:hover {
+  opacity: 0.7;
+}
+
+.saveProfileBtn {
+  background-color: var(--color-dark-green);
+  color: var(--white-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .profileHeader {
   display: flex;
+  gap: 2rem;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 36px;
+  margin-bottom: 2rem;
 }
 
 .avatarWrapper {
@@ -33,11 +69,6 @@
   overflow: hidden;
   border: 2px solid var(--color-earthy-brown);
   cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.avatarWrapper:hover {
-  transform: scale(1.05);
 }
 
 .avatarImage {
@@ -48,18 +79,15 @@
 
 .avatarOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(40, 30, 20, 0.5);
+  background: rgba(0,0,0,0.4);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 13px;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 4px;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .avatarWrapper:hover .avatarOverlay {
@@ -67,160 +95,105 @@
 }
 
 .profileInfo h2 {
-  font-size: 22px;
-  margin-bottom: 4px;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 .profileInfo p {
-  font-size: 14px;
-  color: #6b4f3f;
+  margin: 0.25rem 0;
+  color: var(--color-earthy-brown);
 }
 
-/* XP Bar */
 .levelStats {
-  margin-top: 12px;
+  margin-top: 1rem;
 }
 
 .xpBar {
-  height: 8px;
-  background-color: #eee;
-  border-radius: 4px;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
   overflow: hidden;
-  margin: 6px 0;
-  width: 180px;
+  margin: 0.25rem 0;
 }
 
 .xpFill {
   height: 100%;
   background-color: var(--color-dark-green);
-  transition: width 0.4s ease;
 }
 
-/* Section spacing */
-.section {
-  margin-top: 32px;
+.profileSection {
+  margin-bottom: 2rem;
 }
 
-.section h3 {
-  font-size: 18px;
+.profileSection h3 {
+  margin-bottom: 0.5rem;
   color: var(--color-dark-brown);
-  margin-bottom: 10px;
+  font-size: 1.2rem;
 }
 
-/* Genre/Tag display */
-.genreList,
-.tagList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.genreList li,
-.tagList li {
-  background-color: var(--color-earthy-brown);
-  color: var(--white-color);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-}
-
-/* Favorite books shelf preview */
-.bookList {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.bookList li {
-  list-style: none;
-  cursor: pointer;
-  width: 60px;
-  height: 90px;
+.profileGenreSelect {
+  padding: 6px;
   border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid #e5d4c2;
+  margin-bottom: 1rem;
+  border: 1px solid var(--color-earthy-brown);
+}
+
+.profileBooklist {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0;
+  list-style: none;
+}
+
+.profileBooklist img {
+  height: 120px;
+  border-radius: 8px;
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.bookList li:hover {
-  transform: scale(1.05);
-}
-
-.bookList img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Error message */
-.profileError {
-  color: var(--color-deep-red);
-  font-size: 14px;
-  text-align: center;
-}
-
-.bioHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.editIcon {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.editIcon:hover {
-  opacity: 1;
-}
-
-
-.notebookPaper {
-  background: repeating-linear-gradient(
-    white,
-    white 24px,
-    #f0e6d6 25px
-  );
-  border: 1px solid var(--color-earthy-brown);
-  border-radius: 8px;
-  padding: 12px;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
-  line-height: 24px;
-  color: var(--color-dark-brown);
-  min-height: 120px;
-  white-space: pre-wrap;
+.profileBooklist img:hover {
+  transform: scale(1.03);
 }
 
 .notebookTextarea {
   width: 100%;
-  min-height: 120px;
-  padding: 12px;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
-  line-height: 24px;
+  min-height: 100px;
+  padding: 10px;
+  font-family: var(--font-family);
+  background: var(--paper-texture);
   border: 1px solid var(--color-earthy-brown);
   border-radius: 8px;
-  background: repeating-linear-gradient(
-    white,
-    white 24px,
-    #f0e6d6 25px
-  );
-  resize: vertical;
-  color: var(--color-dark-brown);
+  line-height: 1.5;
 }
 
-.saveBioBtn {
-  margin-top: 8px;
-  padding: 6px 12px;
-  font-size: 14px;
-  background-color: var(--color-dark-green);
-  color: var(--white-color);
+.notebookPaper {
+  padding: 12px;
+  background: var(--paper-texture);
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+}
+
+.removeGenreBtn {
+  background: var(--color-deep-red);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
   border: none;
-  border-radius: 6px;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  font-size: 12px;
+  line-height: 1;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.removeGenreBtn:hover {
+  background: #aa2e2e;
 }

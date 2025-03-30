@@ -1,1 +1,0 @@
-//A component to represent each tag with functionality to upvote or downvote it
